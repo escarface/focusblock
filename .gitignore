@@ -30,6 +30,14 @@ yarn-error.*
 .DS_Store
 *.pem
 
+# local tooling
+.agent/
+.claude/
+.codex/
+.cursor/
+.gemini/
+.opencode/
+
 # local env files
 .env*.local
 
