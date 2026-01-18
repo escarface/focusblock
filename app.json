@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "FocusBlocks",
-    "slug": "FocusBlocks",
+    "slug": "focusblocks",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FocusBlocks Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FF9E7D", // Warm Peach color for active states
+                        "primary-dark": "#E88B6A",
+                        "background-light": "#FFFBF7", // Creamy warm background
+                        "background-dark": "#1C1917", // Warm brownish-black (Stone 950)
+                        "card-light": "#FFFFFF",
+                        "card-dark": "#292524", // Stone 800
+                        "subtle-light": "#F5F0EB",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"],
+                        "serif": ["Lora", "serif"], // Added serif for premium headings
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1rem", "2xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>.toggle-checkbox:checked {
+            right: 0;
+            border-color: #FF9E7D;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #FF9E7D;
+        }
+    </style>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen font-sans antialiased text-stone-800 dark:text-stone-100 selection:bg-primary/30 selection:text-stone-900 transition-colors duration-500">
+<div class="sticky top-0 z-50 w-full bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-stone-100 dark:border-white/5 transition-colors duration-300">
+<div class="flex items-center justify-between px-6 h-16 max-w-md mx-auto">
+<button class="flex items-center justify-center size-10 -ml-2 text-stone-800 dark:text-stone-200 active:opacity-70 transition-opacity rounded-full hover:bg-stone-100 dark:hover:bg-white/5">
+<span class="material-symbols-outlined font-light" style="font-size: 24px;">arrow_back_ios_new</span>
+</button>
+<h1 class="text-xl font-serif font-semibold tracking-tight text-stone-900 dark:text-stone-50">Settings</h1>
+<div class="size-10 -mr-2"></div> 
+</div>
+</div>
+<main class="w-full max-w-md mx-auto px-6 pb-12 pt-8 flex flex-col gap-10">
+<section>
+<div class="px-2 pb-3">
+<h3 class="text-sm font-serif font-medium text-stone-500 dark:text-stone-400">General</h3>
+</div>
+<div class="flex flex-col bg-white dark:bg-card-dark rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-none border border-stone-100 dark:border-white/5 overflow-hidden">
+<div class="flex items-center justify-between p-5 border-b border-stone-50 dark:border-white/5 last:border-0 hover:bg-stone-50/50 dark:hover:bg-white/5 transition-colors group">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-11 rounded-full bg-stone-100 text-stone-600 dark:bg-stone-800 dark:text-stone-300 shrink-0 transition-colors group-hover:bg-primary/10 group-hover:text-primary-dark">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[17px] font-serif font-medium leading-tight text-stone-800 dark:text-stone-100">Sound Alerts</span>
+<span class="text-xs text-stone-400 dark:text-stone-500 mt-1">Focus session chimes</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer shrink-0">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-[50px] h-7 bg-stone-200 peer-focus:outline-none rounded-full peer dark:bg-stone-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-primary shadow-inner"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-5 border-b border-stone-50 dark:border-white/5 last:border-0 hover:bg-stone-50/50 dark:hover:bg-white/5 transition-colors group">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-11 rounded-full bg-stone-100 text-stone-600 dark:bg-stone-800 dark:text-stone-300 shrink-0 transition-colors group-hover:bg-primary/10 group-hover:text-primary-dark">
+<span class="material-symbols-outlined text-[22px]">language</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[17px] font-serif font-medium leading-tight text-stone-800 dark:text-stone-100">Web Notifications</span>
+<span class="text-xs text-stone-400 dark:text-stone-500 mt-1">Desktop sync alerts</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer shrink-0">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-[50px] h-7 bg-stone-200 peer-focus:outline-none rounded-full peer dark:bg-stone-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-primary shadow-inner"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-5 border-b border-stone-50 dark:border-white/5 last:border-0 hover:bg-stone-50/50 dark:hover:bg-white/5 transition-colors group">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-11 rounded-full bg-stone-100 text-stone-600 dark:bg-stone-800 dark:text-stone-300 shrink-0 transition-colors group-hover:bg-primary/10 group-hover:text-primary-dark">
+<span class="material-symbols-outlined text-[22px]">dark_mode</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[17px] font-serif font-medium leading-tight text-stone-800 dark:text-stone-100">Dark Mode</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer shrink-0">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-[50px] h-7 bg-stone-200 peer-focus:outline-none rounded-full peer dark:bg-stone-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-primary shadow-inner"></div>
+</label>
+</div>
+</div>
+</section>
+<section>
+<div class="px-2 pb-3">
+<h3 class="text-sm font-serif font-medium text-stone-500 dark:text-stone-400">Account</h3>
+</div>
+<div class="flex flex-col bg-white dark:bg-card-dark rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] dark:shadow-none border border-stone-100 dark:border-white/5 overflow-hidden">
+<button class="w-full flex items-center justify-between p-5 border-b border-stone-50 dark:border-white/5 last:border-0 hover:bg-stone-50/50 dark:hover:bg-white/5 transition-colors group text-left">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-11 rounded-full bg-stone-100 text-stone-600 dark:bg-stone-800 dark:text-stone-300 shrink-0 group-hover:bg-primary/10 group-hover:text-primary-dark transition-colors">
+<span class="material-symbols-outlined text-[22px]">person</span>
+</div>
+<span class="text-[17px] font-serif font-medium leading-tight text-stone-800 dark:text-stone-100">Edit Profile</span>
+</div>
+<span class="material-symbols-outlined text-stone-300 text-sm">arrow_forward_ios</span>
+</button>
+<button class="w-full flex items-center justify-between p-5 border-b border-stone-50 dark:border-white/5 last:border-0 hover:bg-stone-50/50 dark:hover:bg-white/5 transition-colors group text-left">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-11 rounded-full bg-stone-100 text-stone-600 dark:bg-stone-800 dark:text-stone-300 shrink-0 group-hover:bg-primary/10 group-hover:text-primary-dark transition-colors">
+<span class="material-symbols-outlined text-[22px]">credit_card</span>
+</div>
+<span class="text-[17px] font-serif font-medium leading-tight text-stone-800 dark:text-stone-100">Manage Subscription</span>
+</div>
+<span class="material-symbols-outlined text-stone-300 text-sm">arrow_forward_ios</span>
+</button>
+<button class="w-full flex items-center justify-between p-5 border-b border-stone-50 dark:border-white/5 last:border-0 hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors group text-left">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-11 rounded-full bg-red-50 text-red-500 dark:bg-red-900/20 dark:text-red-400 shrink-0">
+<span class="material-symbols-outlined text-[22px]">logout</span>
+</div>
+<span class="text-[17px] font-serif font-medium leading-tight text-red-500 dark:text-red-400">Log Out</span>
+</div>
+</button>
+</div>
+</section>
+<div class="py-6 text-center">
+<p class="text-xs text-stone-400 font-medium tracking-wide opacity-60">FocusBlocks v1.0.2 (Build 3405)</p>
+</div>
+</main>
+
+</body></html>

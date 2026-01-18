@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FocusBlocks History</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    // Warm Amber Theme
+                    "primary": "#d97706", // Amber-600
+                    "primary-light": "#fbbf24", // Amber-400
+                    "primary-soft": "#fffbeb", // Amber-50
+                    // Paper/Organic Backgrounds
+                    "background-light": "#fdfbf7", // Warm Cream/Paper
+                    "background-dark": "#1c1917", // Stone-900 (Warm Dark)
+                    // Surface Colors
+                    "surface-light": "#ffffff",
+                    "surface-dark": "#292524", // Stone-800
+                    // Borders
+                    "surface-border-light": "#e7e5e4", // Stone-200
+                    "surface-border-dark": "#44403c", // Stone-700
+                    // Text
+                    "text-main": "#292524", // Stone-800
+                    "text-muted": "#78716c", // Stone-500
+                    "text-on-primary": "#ffffff",
+                },
+                fontFamily: {
+                    "display": ["Inter", "sans-serif"]
+                },
+                borderRadius: {
+                    "DEFAULT": "0.25rem", 
+                    "lg": "0.5rem", 
+                    "xl": "0.75rem", 
+                    "2xl": "1rem", 
+                    "3xl": "1.5rem",
+                    "full": "9999px"
+                },
+                boxShadow: {
+                    "soft": "0 4px 20px -2px rgba(217, 119, 6, 0.1)", // Warm amber shadow
+                    "glow": "0 0 15px rgba(217, 119, 6, 0.3)",
+                }
+            },
+        },
+    }
+</script>
+<style>.no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    body {
+        min-height: max(884px, 100dvh);
+    }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main dark:text-stone-100 h-screen flex flex-col overflow-hidden selection:bg-primary-light selection:text-stone-900">
+<header class="flex items-center justify-between p-4 pb-2 bg-background-light dark:bg-background-dark shrink-0 z-10 relative">
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-stone-200/50 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-stone-700 dark:text-stone-200">arrow_back_ios_new</span>
+</button>
+<h2 class="text-lg font-bold leading-tight tracking-tight flex-1 text-center text-stone-800 dark:text-stone-100">History</h2>
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-stone-200/50 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-stone-500 dark:text-stone-400">filter_list</span>
+</button>
+</header>
+<main class="flex-1 overflow-y-auto no-scrollbar pb-24 relative">
+<div class="px-4 py-4">
+<div class="flex items-center justify-between mb-4 px-2">
+<span class="text-sm font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wide">October 2023</span>
+<div class="flex gap-2">
+<button class="p-1 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 text-stone-500"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="p-1 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 text-stone-500"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+<div class="flex justify-between items-center gap-2 overflow-x-auto no-scrollbar pb-2">
+<button class="flex flex-col items-center gap-1 min-w-[44px] p-2 rounded-xl transition-all hover:bg-stone-100 dark:hover:bg-surface-dark group">
+<span class="text-xs font-medium text-stone-400 dark:text-stone-500 group-hover:text-stone-600 dark:group-hover:text-stone-300">M</span>
+<span class="text-sm font-bold text-stone-400 dark:text-stone-500 group-hover:text-stone-800 dark:group-hover:text-stone-200">20</span>
+</button>
+<button class="flex flex-col items-center gap-1 min-w-[44px] p-2 rounded-xl transition-all hover:bg-stone-100 dark:hover:bg-surface-dark group">
+<span class="text-xs font-medium text-stone-400 dark:text-stone-500 group-hover:text-stone-600 dark:group-hover:text-stone-300">T</span>
+<span class="text-sm font-bold text-stone-400 dark:text-stone-500 group-hover:text-stone-800 dark:group-hover:text-stone-200">21</span>
+</button>
+<button class="flex flex-col items-center gap-1 min-w-[44px] p-2 rounded-xl transition-all hover:bg-stone-100 dark:hover:bg-surface-dark group">
+<span class="text-xs font-medium text-stone-400 dark:text-stone-500 group-hover:text-stone-600 dark:group-hover:text-stone-300">W</span>
+<span class="text-sm font-bold text-stone-400 dark:text-stone-500 group-hover:text-stone-800 dark:group-hover:text-stone-200">22</span>
+</button>
+<button class="flex flex-col items-center gap-1 min-w-[44px] p-2 rounded-xl bg-primary shadow-glow transform scale-105 border border-primary-light/20">
+<span class="text-xs font-bold text-white/90">T</span>
+<span class="text-lg font-bold text-white">23</span>
+</button>
+<button class="flex flex-col items-center gap-1 min-w-[44px] p-2 rounded-xl transition-all hover:bg-stone-100 dark:hover:bg-surface-dark group">
+<span class="text-xs font-medium text-stone-400 dark:text-stone-500 group-hover:text-stone-600 dark:group-hover:text-stone-300">F</span>
+<span class="text-sm font-bold text-stone-400 dark:text-stone-500 group-hover:text-stone-800 dark:group-hover:text-stone-200">24</span>
+</button>
+<button class="flex flex-col items-center gap-1 min-w-[44px] p-2 rounded-xl transition-all hover:bg-stone-100 dark:hover:bg-surface-dark group">
+<span class="text-xs font-medium text-stone-400 dark:text-stone-500 group-hover:text-stone-600 dark:group-hover:text-stone-300">S</span>
+<span class="text-sm font-bold text-stone-400 dark:text-stone-500 group-hover:text-stone-800 dark:group-hover:text-stone-200">25</span>
+</button>
+<button class="flex flex-col items-center gap-1 min-w-[44px] p-2 rounded-xl transition-all hover:bg-stone-100 dark:hover:bg-surface-dark group">
+<span class="text-xs font-medium text-stone-400 dark:text-stone-500 group-hover:text-stone-600 dark:group-hover:text-stone-300">S</span>
+<span class="text-sm font-bold text-stone-400 dark:text-stone-500 group-hover:text-stone-800 dark:group-hover:text-stone-200">26</span>
+</button>
+</div>
+</div>
+<div class="px-4 py-2">
+<div class="grid grid-cols-2 gap-3">
+<div class="flex flex-col justify-between p-4 rounded-2xl bg-surface-light dark:bg-surface-dark border border-surface-border-light dark:border-surface-border-dark shadow-sm dark:shadow-none">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-xl">timelapse</span>
+<p class="text-xs font-semibold uppercase tracking-wide text-stone-500">Total Focus</p>
+</div>
+<p class="text-3xl font-bold text-stone-800 dark:text-stone-100 tracking-tight">4h 25m</p>
+</div>
+<div class="flex flex-col justify-between p-4 rounded-2xl bg-surface-light dark:bg-surface-dark border border-surface-border-light dark:border-surface-border-dark shadow-sm dark:shadow-none">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<p class="text-xs font-semibold uppercase tracking-wide text-stone-500">Sessions</p>
+</div>
+<p class="text-3xl font-bold text-stone-800 dark:text-stone-100 tracking-tight">8</p>
+</div>
+</div>
+</div>
+<div class="px-4 py-4">
+<div class="p-5 rounded-2xl bg-stone-800 dark:bg-stone-900 border border-stone-700/50 relative overflow-hidden shadow-lg">
+<div class="absolute top-0 right-0 w-40 h-40 bg-primary/10 rounded-full blur-3xl pointer-events-none translate-x-1/4 -translate-y-1/4"></div>
+<div class="flex justify-between items-end mb-3 relative z-10">
+<div>
+<p class="text-stone-100 text-base font-bold mb-1">Daily Goal</p>
+<p class="text-stone-400 text-xs font-medium">Keep up the rhythm</p>
+</div>
+<p class="text-primary-light font-bold text-lg">75%</p>
+</div>
+<div class="relative h-2.5 w-full bg-stone-700/50 rounded-full overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-gradient-to-r from-amber-600 to-primary-light rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(251,191,36,0.2)]" style="width: 75%;"></div>
+</div>
+</div>
+</div>
+<div class="h-px bg-stone-200 dark:bg-surface-border-dark mx-6 my-2"></div>
+<div class="px-4 pt-4 pb-8">
+<h3 class="text-lg font-bold text-stone-800 dark:text-stone-100 mb-4 px-2">Completed Blocks</h3>
+<div class="flex flex-col gap-3">
+<div class="group flex items-center p-3 pr-4 rounded-2xl bg-surface-light dark:bg-surface-dark border border-surface-border-light dark:border-surface-border-dark hover:border-primary/40 transition-all cursor-pointer shadow-sm hover:shadow-soft">
+<div class="h-12 w-12 rounded-xl bg-stone-100 dark:bg-stone-800 flex items-center justify-center mr-4 shrink-0 group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-stone-400 group-hover:text-primary transition-colors">code</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="text-base font-bold text-stone-800 dark:text-stone-100 truncate">Deep Work: Coding</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-xs text-stone-500 font-medium">10:00 AM - 10:50 AM</span>
+<span class="size-1 rounded-full bg-stone-300 dark:bg-stone-600"></span>
+<span class="text-xs text-stone-500 font-medium">Productivity</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-sm font-bold text-primary">50m</span>
+<span class="material-symbols-outlined text-primary text-base" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<div class="group flex items-center p-3 pr-4 rounded-2xl bg-surface-light dark:bg-surface-dark border border-surface-border-light dark:border-surface-border-dark hover:border-primary/40 transition-all cursor-pointer shadow-sm hover:shadow-soft">
+<div class="h-12 w-12 rounded-xl bg-stone-100 dark:bg-stone-800 flex items-center justify-center mr-4 shrink-0 group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-stone-400 group-hover:text-primary transition-colors">mail</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="text-base font-bold text-stone-800 dark:text-stone-100 truncate">Email Triage</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-xs text-stone-500 font-medium">11:00 AM - 11:25 AM</span>
+<span class="size-1 rounded-full bg-stone-300 dark:bg-stone-600"></span>
+<span class="text-xs text-stone-500 font-medium">Admin</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-sm font-bold text-primary">25m</span>
+<span class="material-symbols-outlined text-primary text-base" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<div class="group flex items-center p-3 pr-4 rounded-2xl bg-surface-light dark:bg-surface-dark border border-surface-border-light dark:border-surface-border-dark hover:border-primary/40 transition-all cursor-pointer shadow-sm hover:shadow-soft">
+<div class="h-12 w-12 rounded-xl bg-stone-100 dark:bg-stone-800 flex items-center justify-center mr-4 shrink-0 group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-stone-400 group-hover:text-primary transition-colors">edit_note</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="text-base font-bold text-stone-800 dark:text-stone-100 truncate">Project Planning</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-xs text-stone-500 font-medium">01:30 PM - 02:15 PM</span>
+<span class="size-1 rounded-full bg-stone-300 dark:bg-stone-600"></span>
+<span class="text-xs text-stone-500 font-medium">Strategy</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-sm font-bold text-primary">45m</span>
+<span class="material-symbols-outlined text-primary text-base" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<div class="group flex items-center p-3 pr-4 rounded-2xl bg-surface-light dark:bg-surface-dark border border-surface-border-light dark:border-surface-border-dark hover:border-primary/40 transition-all cursor-pointer shadow-sm hover:shadow-soft">
+<div class="h-12 w-12 rounded-xl bg-stone-100 dark:bg-stone-800 flex items-center justify-center mr-4 shrink-0 group-hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined text-stone-400 group-hover:text-primary transition-colors">menu_book</span>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="text-base font-bold text-stone-800 dark:text-stone-100 truncate">Reading &amp; Research</h4>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-xs text-stone-500 font-medium">03:00 PM - 03:25 PM</span>
+<span class="size-1 rounded-full bg-stone-300 dark:bg-stone-600"></span>
+<span class="text-xs text-stone-500 font-medium">Learning</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-sm font-bold text-primary">25m</span>
+<span class="material-symbols-outlined text-primary text-base" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+<div class="h-24"></div>
+</main>
+<nav class="fixed bottom-0 w-full bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-xl border-t border-surface-border-light dark:border-stone-800 pb-6 pt-3 px-6 z-50">
+<div class="flex justify-between items-center max-w-sm mx-auto">
+<button class="flex flex-col items-center gap-1 group">
+<span class="material-symbols-outlined text-stone-400 group-hover:text-primary transition-colors text-2xl">timer</span>
+<span class="text-[10px] font-medium text-stone-400 group-hover:text-primary transition-colors">Timer</span>
+</button>
+<button class="flex flex-col items-center gap-1 group">
+<span class="material-symbols-outlined text-stone-400 group-hover:text-primary transition-colors text-2xl">check_box</span>
+<span class="text-[10px] font-medium text-stone-400 group-hover:text-primary transition-colors">Tasks</span>
+</button>
+<button class="flex flex-col items-center gap-1 group">
+<span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">bar_chart</span>
+<span class="text-[10px] font-bold text-primary">History</span>
+</button>
+<button class="flex flex-col items-center gap-1 group">
+<span class="material-symbols-outlined text-stone-400 group-hover:text-primary transition-colors text-2xl">settings</span>
+<span class="text-[10px] font-medium text-stone-400 group-hover:text-primary transition-colors">Settings</span>
+</button>
+</div>
+</nav>
+
+</body></html>

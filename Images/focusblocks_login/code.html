@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FocusBlocks Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: "#FFF9F2", 
+                        surface: "#FFFFFF",
+                        terracotta: {
+                            50: '#FDF3F1',
+                            100: '#FBE8E4',
+                            500: '#E07A5F', // Warm primary
+                            600: '#D06045',
+                        },
+                        amber: {
+                            100: '#FEF3C7',
+                            300: '#FCD34D',
+                            400: '#F6C445', // Soft warm glow
+                        },
+                        coffee: {
+                            600: '#9C9086', // Muted text
+                            800: '#5D534A', // Primary text
+                            900: '#3D3632', // Headings
+                        },
+                        stone: {
+                            200: '#E7E5E4',
+                            300: '#D6D3D1',
+                        }
+                    },
+                    fontFamily: {
+                        "display": ["Nunito", "sans-serif"],
+                        "sans": ["Nunito", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "3xl": "2rem",
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(93, 83, 74, 0.05)',
+                        'glow': '0 10px 30px -5px rgba(224, 122, 95, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>.organic-shape-1 {
+            background: radial-gradient(circle at center, rgba(246, 196, 69, 0.15) 0%, rgba(255, 249, 242, 0) 70%);
+            border-radius: 43% 57% 72% 28% / 46% 41% 59% 54%;
+        }
+        .organic-shape-2 {
+            background: radial-gradient(circle at center, rgba(224, 122, 95, 0.12) 0%, rgba(255, 249, 242, 0) 70%);
+            border-radius: 65% 35% 26% 74% / 55% 58% 42% 45%;
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-cream font-sans antialiased min-h-screen flex flex-col items-center justify-center selection:bg-terracotta-500 selection:text-white">
+<div class="w-full max-w-md px-8 py-8 flex flex-col h-screen max-h-[850px] justify-between relative overflow-hidden">
+<div class="absolute -top-[10%] -right-[15%] w-[140%] h-[60%] organic-shape-1 pointer-events-none z-0 mix-blend-multiply blur-2xl"></div>
+<div class="absolute -bottom-[5%] -left-[15%] w-[120%] h-[50%] organic-shape-2 pointer-events-none z-0 mix-blend-multiply blur-2xl"></div>
+<div class="relative z-10 flex flex-col items-center pt-16 sm:pt-24">
+<div class="w-24 h-24 bg-white/60 backdrop-blur-sm rounded-3xl flex items-center justify-center border border-white shadow-soft mb-8 transition-transform hover:scale-105 duration-300">
+<span class="material-symbols-outlined text-terracotta-500 text-[48px]" style="font-variation-settings: 'FILL' 1, 'wght' 600;">check_circle</span>
+</div>
+<h1 class="text-4xl font-extrabold text-coffee-900 tracking-tight text-center">FocusBlocks</h1>
+<p class="text-coffee-600 mt-3 text-center text-lg font-semibold max-w-[280px] leading-relaxed">Your cozy space for deep work.</p>
+</div>
+<div class="relative z-10 w-full flex-1 flex flex-col justify-center gap-8 mt-6">
+<div class="space-y-5">
+<label class="block group">
+<span class="sr-only">Email address</span>
+<div class="relative transition-transform duration-200 focus-within:-translate-y-1">
+<input class="block w-full rounded-2xl border-0 bg-surface/80 backdrop-blur-md py-4 pl-6 pr-12 text-coffee-900 shadow-sm ring-1 ring-inset ring-stone-200 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-terracotta-500 sm:text-base sm:leading-6 transition-all duration-200" name="email" placeholder="name@example.com" type="email"/>
+<div class="absolute inset-y-0 right-0 flex items-center pr-5 pointer-events-none text-terracotta-500/50 group-focus-within:text-terracotta-500 transition-colors">
+<span class="material-symbols-outlined text-[24px]">mail</span>
+</div>
+</div>
+</label>
+<button class="flex w-full cursor-pointer items-center justify-center rounded-2xl bg-terracotta-500 py-4 px-3 text-base font-bold leading-6 text-white shadow-glow hover:bg-terracotta-600 hover:shadow-lg hover:-translate-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta-500 transition-all duration-200" type="button">
+                Send Magic Link
+            </button>
+</div>
+<div class="relative py-2">
+<div aria-hidden="true" class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-stone-200/80"></div>
+</div>
+<div class="relative flex justify-center">
+<span class="bg-cream px-4 text-xs uppercase tracking-wider text-coffee-600 font-bold">Or continue with</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex w-full items-center justify-center gap-3 rounded-2xl bg-surface/60 backdrop-blur-sm py-4 px-3 text-sm font-bold text-coffee-800 ring-1 ring-inset ring-stone-200 hover:bg-white hover:ring-stone-300 hover:shadow-soft hover:-translate-y-1 transition-all focus:outline-none focus:ring-2 focus:ring-terracotta-500/50" type="button">
+<svg aria-hidden="true" class="h-5 w-5 opacity-80" viewBox="0 0 24 24">
+<path d="M12.0003 20.45c4.6667 0 8.45-3.7833 8.45-8.45 0-.4167-.0334-.8167-.1-1.2h-8.35v3.2h4.7834c-.2 1.1333-1.2167 3.2-4.7834 3.2-2.8833 0-5.2333-2.35-5.2333-5.2333s2.35-5.2333 5.2333-5.2333c1.3333 0 2.5167.4833 3.45 1.3833l2.5333-2.5333C16.4836 4.0833 14.3836 3.2 12.0003 3.2c-4.85 0-8.8 3.95-8.8 8.8s3.95 8.8 8.8 8.8z" fill="currentColor"></path>
+</svg>
+<span>Google</span>
+</button>
+<button class="flex w-full items-center justify-center gap-3 rounded-2xl bg-surface/60 backdrop-blur-sm py-4 px-3 text-sm font-bold text-coffee-800 ring-1 ring-inset ring-stone-200 hover:bg-white hover:ring-stone-300 hover:shadow-soft hover:-translate-y-1 transition-all focus:outline-none focus:ring-2 focus:ring-terracotta-500/50" type="button">
+<svg aria-hidden="true" class="h-5 w-5 opacity-80" fill="currentColor" viewBox="0 0 24 24">
+<path clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill-rule="evenodd"></path>
+</svg>
+<span>GitHub</span>
+</button>
+</div>
+</div>
+<div class="relative z-10 mt-auto pb-6">
+<p class="text-center text-xs font-medium text-coffee-600">
+            By signing in, you agree to our 
+            <a class="font-bold text-coffee-900 hover:text-terracotta-500 hover:underline transition-colors" href="#">Terms of Service</a> 
+            and 
+            <a class="font-bold text-coffee-900 hover:text-terracotta-500 hover:underline transition-colors" href="#">Privacy Policy</a>.
+        </p>
+</div>
+</div>
+
+</body></html>

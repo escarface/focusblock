@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FocusBlocks Edit Block</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "cream": {
+                            50: "#FFFCF9",
+                            100: "#FBF9F6", // Main Modal BG
+                            200: "#F2EFE9", // Input BG
+                            300: "#E6E1D6", // Border
+                        },
+                        "earth": {
+                            400: "#A69C8E", // Muted text
+                            600: "#7A6F62",
+                            800: "#3D342B", // Main Text
+                            900: "#26201A",
+                        },
+                        "primary": "#CD6E4E", // Terracotta Action
+                        "primary-hover": "#B55D3F",
+                        // Palette Colors
+                        "ochre": "#DFA868",
+                        "rose": "#D69898",
+                        "olive": "#8C9E78",
+                        "terracotta": "#C76D5B",
+                        "clay": "#A89B8C",
+                    },
+                    fontFamily: {
+                        "display": ["Outfit", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                    },
+                    boxShadow: {
+                        "soft": "0 10px 40px -10px rgba(61, 52, 43, 0.08)",
+                        "inner-soft": "inset 0 2px 4px 0 rgba(0, 0, 0, 0.02)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>.scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }input[type="radio"]:checked + div {
+            transform: scale(1.1);
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#F0EEE6] font-display antialiased text-earth-800 h-screen overflow-hidden flex flex-col items-center justify-end sm:justify-center">
+<div class="w-full max-w-md h-full sm:h-auto sm:max-h-[90vh] bg-cream-100 sm:rounded-3xl shadow-soft relative flex flex-col overflow-hidden">
+<div class="flex flex-col items-stretch pt-3 pb-2 bg-cream-100 shrink-0">
+<div class="flex h-5 w-full items-center justify-center">
+<div class="h-1.5 w-12 rounded-full bg-cream-300"></div>
+</div>
+</div>
+<div class="px-8 pb-4 pt-2 shrink-0 flex items-center justify-between">
+<h2 class="text-earth-900 tracking-tight text-2xl font-bold leading-tight">Edit Block</h2>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-cream-200 text-earth-600 hover:bg-cream-300 hover:text-earth-900 transition-colors">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto scrollbar-hide px-8 py-2 space-y-8">
+<div class="flex flex-col gap-3">
+<label class="text-earth-800 text-base font-semibold leading-normal pl-1">What are you working on?</label>
+<div class="relative group">
+<input class="form-input flex w-full min-w-0 resize-none overflow-hidden rounded-2xl text-earth-900 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary border-2 border-cream-300 bg-white h-16 placeholder:text-earth-400 px-5 text-lg font-medium leading-normal transition-all shadow-sm" placeholder="e.g., Deep Work" type="text" value="Project Planning"/>
+<div class="absolute right-5 top-1/2 -translate-y-1/2 text-earth-400 group-focus-within:text-primary transition-colors pointer-events-none">
+<span class="material-symbols-outlined filled">edit</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center px-1">
+<h3 class="text-earth-800 text-lg font-bold leading-tight tracking-tight">Duration</h3>
+<div class="bg-cream-200 px-3 py-1 rounded-full border border-cream-300">
+<span class="text-xs font-bold text-earth-600 uppercase tracking-wider">Minutes</span>
+</div>
+</div>
+<div class="relative w-full h-20 flex items-center justify-center bg-white border-2 border-cream-300 rounded-2xl overflow-hidden shadow-inner-soft">
+<div class="absolute inset-y-2 inset-x-[34%] bg-cream-100 rounded-xl shadow-sm border border-cream-300/50 z-0"></div>
+<div class="flex w-full items-center justify-between px-2 relative z-10">
+<button class="flex-1 h-14 flex items-center justify-center text-earth-400 hover:text-earth-600 font-medium text-lg transition-colors">
+                            15
+                        </button>
+<button class="flex-1 h-14 flex items-center justify-center text-primary font-bold text-3xl scale-110 transform transition-transform">
+                            25
+                        </button>
+<button class="flex-1 h-14 flex items-center justify-center text-earth-400 hover:text-earth-600 font-medium text-lg transition-colors">
+                            30
+                        </button>
+</div>
+<div class="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-white to-transparent pointer-events-none z-20"></div>
+<div class="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent pointer-events-none z-20"></div>
+</div>
+<div class="flex gap-3 justify-center mt-1">
+<button class="px-4 py-2 rounded-full text-xs font-bold bg-white border border-cream-300 text-earth-600 hover:bg-cream-50 hover:border-primary/30 transition-all shadow-sm">+5m</button>
+<button class="px-4 py-2 rounded-full text-xs font-bold bg-white border border-cream-300 text-earth-600 hover:bg-cream-50 hover:border-primary/30 transition-all shadow-sm">+10m</button>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h3 class="text-earth-800 text-lg font-bold leading-tight tracking-tight px-1">Tag Color</h3>
+<div class="flex items-center justify-between gap-2 px-2 py-2 bg-white rounded-2xl border border-cream-300 shadow-sm">
+<label class="relative cursor-pointer group flex items-center justify-center w-full">
+<input class="peer sr-only" name="color-tag" type="radio"/>
+<div class="w-9 h-9 rounded-full bg-ochre ring-2 ring-transparent peer-checked:ring-ochre peer-checked:ring-offset-2 peer-checked:ring-offset-white transition-all"></div>
+</label>
+<label class="relative cursor-pointer group flex items-center justify-center w-full">
+<input class="peer sr-only" name="color-tag" type="radio"/>
+<div class="w-9 h-9 rounded-full bg-rose ring-2 ring-transparent peer-checked:ring-rose peer-checked:ring-offset-2 peer-checked:ring-offset-white transition-all"></div>
+</label>
+<label class="relative cursor-pointer group flex items-center justify-center w-full">
+<input class="peer sr-only" name="color-tag" type="radio"/>
+<div class="w-9 h-9 rounded-full bg-olive ring-2 ring-transparent peer-checked:ring-olive peer-checked:ring-offset-2 peer-checked:ring-offset-white transition-all"></div>
+</label>
+<label class="relative cursor-pointer group flex items-center justify-center w-full">
+<input checked="" class="peer sr-only" name="color-tag" type="radio"/>
+<div class="w-9 h-9 rounded-full bg-terracotta ring-2 ring-transparent peer-checked:ring-terracotta peer-checked:ring-offset-2 peer-checked:ring-offset-white transition-all flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-base font-bold opacity-0 peer-checked:opacity-100 transition-opacity">check</span>
+</div>
+</label>
+<label class="relative cursor-pointer group flex items-center justify-center w-full">
+<input class="peer sr-only" name="color-tag" type="radio"/>
+<div class="w-9 h-9 rounded-full bg-clay ring-2 ring-transparent peer-checked:ring-clay peer-checked:ring-offset-2 peer-checked:ring-offset-white transition-all"></div>
+</label>
+</div>
+</div>
+<div class="h-2"></div> 
+</div>
+<div class="p-8 pt-4 bg-cream-100 shrink-0 flex flex-col gap-4 border-t border-cream-200">
+<button class="flex w-full items-center justify-center overflow-hidden rounded-2xl bg-primary px-4 py-4 text-white text-lg font-bold leading-normal tracking-wide hover:bg-primary-hover transition-colors shadow-lg shadow-primary/20 active:scale-[0.98]">
+<span class="truncate">Save Block</span>
+</button>
+<button class="flex w-full items-center justify-center text-earth-400 text-sm font-semibold hover:text-earth-800 transition-colors">
+                Cancel
+            </button>
+</div>
+</div>
+
+</body></html>
