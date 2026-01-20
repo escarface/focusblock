@@ -18,7 +18,10 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.focusblocks.app",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,6 +33,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "18473293-50b6-4e31-a39b-da91477c59d6"
+      }
     }
   }
 }
