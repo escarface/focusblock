@@ -5,6 +5,7 @@ import React, { createContext, useContext, useReducer, useEffect, useCallback } 
 import * as storage from '../storage';
 import { createBlock, createProject, createSession, createUser } from '../models';
 import { timerService } from '../services/TimerService';
+import { SharedDataService } from '../services/SharedDataService';
 
 // Safe boolean conversion that handles string "true"/"false"
 const toBoolean = (value) => {
@@ -287,8 +288,13 @@ export function AppProvider({ children }) {
     const newState = { ...state.timerState, ...updates };
     await storage.setTimerState(newState);
     dispatch({ type: ACTIONS.UPDATE_TIMER_STATE, payload: updates });
+
+    // Sync to shared container for iOS widget and Apple Watch
+    const activeBlock = state.blocks.find(b => b.id === newState.blockId);
+    SharedDataService.updateTimerState(newState, activeBlock);
+
     return newState;
-  }, [state.timerState]);
+  }, [state.timerState, state.blocks]);
 
   const clearTimerState = useCallback(async () => {
     // Asegurar que el servicio también se detenga

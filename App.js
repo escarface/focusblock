@@ -9,6 +9,7 @@ import { AppProvider } from './src/contexts/AppContext';
 import { ThemeProvider } from './src/contexts/ThemeContext';
 import AppNavigator from './src/navigation/AppNavigator';
 import { notificationService } from './src/services/NotificationService';
+import { WatchCommandHandler } from './src/components/WatchCommandHandler';
 
 // Keep splash screen visible while loading
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -46,6 +47,7 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <AppProvider>
+          <WatchCommandHandler />
           <ThemeProvider>
             <AppContent />
           </ThemeProvider>

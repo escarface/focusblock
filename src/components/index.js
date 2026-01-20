@@ -10,3 +10,4 @@ export { default as EmptyState } from './EmptyState';
 export { default as ConfirmDialog } from './ConfirmDialog';
 export { Icon, TabIcon } from './Icons';
 export { SymbolIcon, TabSymbolIcon } from './SymbolIcon';
+export { WatchCommandHandler } from './WatchCommandHandler';
