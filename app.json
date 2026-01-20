@@ -3,6 +3,7 @@
     "name": "FocusBlocks",
     "slug": "focusblocks",
     "version": "1.0.0",
+    "scheme": "focusblocks",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -16,7 +17,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.focusblocks.app"
+      "bundleIdentifier": "com.focusblocks.app",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
