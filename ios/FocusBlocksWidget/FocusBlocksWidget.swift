@@ -44,6 +44,7 @@ struct DisplayState {
     let isPaused: Bool
     let accent: Color
     let isBreak: Bool
+    let isComplete: Bool
 }
 
 struct FocusBlocksEntry: TimelineEntry {
@@ -63,7 +64,8 @@ struct FocusBlocksProvider: TimelineProvider {
                 endDate: Date().addingTimeInterval(900),
                 isPaused: false,
                 accent: .orange,
-                isBreak: false
+                isBreak: false,
+                isComplete: false
             )
         )
     }
@@ -73,9 +75,35 @@ struct FocusBlocksProvider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<FocusBlocksEntry>) -> Void) {
-        let entry = FocusBlocksEntry(date: Date(), state: loadState())
-        let nextRefresh = Calendar.current.date(byAdding: .minute, value: 1, to: Date()) ?? Date().addingTimeInterval(60)
-        completion(Timeline(entries: [entry], policy: .after(nextRefresh)))
+        let now = Date()
+        let currentState = loadState()
+        var entries: [FocusBlocksEntry] = [
+            FocusBlocksEntry(date: now, state: currentState)
+        ]
+
+        if let state = currentState,
+           state.isRunning,
+           state.isPaused == false,
+           let endDate = state.endDate,
+           endDate > now {
+            let completionState = DisplayState(
+                title: state.title,
+                remainingSeconds: 0,
+                totalSeconds: state.totalSeconds,
+                isRunning: false,
+                endDate: nil,
+                isPaused: false,
+                accent: state.accent,
+                isBreak: state.isBreak,
+                isComplete: true
+            )
+            entries.append(FocusBlocksEntry(date: endDate, state: completionState))
+            completion(Timeline(entries: entries, policy: .atEnd))
+            return
+        }
+
+        let nextRefresh = Calendar.current.date(byAdding: .minute, value: 1, to: now) ?? now.addingTimeInterval(60)
+        completion(Timeline(entries: entries, policy: .after(nextRefresh)))
     }
 
     private func loadState() -> DisplayState? {
@@ -112,7 +140,8 @@ struct FocusBlocksProvider: TimelineProvider {
                 endDate: nil,
                 isPaused: isPaused,
                 accent: accent,
-                isBreak: isBreak
+                isBreak: isBreak,
+                isComplete: false
             )
         }
 
@@ -125,7 +154,8 @@ struct FocusBlocksProvider: TimelineProvider {
                 endDate: nil,
                 isPaused: isPaused,
                 accent: accent,
-                isBreak: isBreak
+                isBreak: isBreak,
+                isComplete: false
             )
         }
 
@@ -136,8 +166,9 @@ struct FocusBlocksProvider: TimelineProvider {
         let remaining = max(0, totalSeconds - Int(elapsed))
         let endDate = startDate.addingTimeInterval(TimeInterval(totalSeconds) + totalPaused)
 
-        let shouldShowTimer = isRunning || isPaused
-        let displayTitle = shouldShowTimer ? title : "No active timer"
+        let shouldShowTimer = (isRunning || isPaused) && remaining > 0
+        let isComplete = (isRunning || isPaused) && remaining == 0
+        let displayTitle = isComplete ? title : (shouldShowTimer ? title : "No active timer")
         let displayRemaining = shouldShowTimer ? remaining : nil
         let displayTotal = shouldShowTimer ? totalSeconds : nil
 
@@ -149,7 +180,8 @@ struct FocusBlocksProvider: TimelineProvider {
             endDate: endDate,
             isPaused: isPaused,
             accent: accent,
-            isBreak: isBreak
+            isBreak: isBreak,
+            isComplete: isComplete
         )
     }
 
@@ -177,14 +209,19 @@ struct FocusBlocksWidgetEntryView: View {
         let progress = progressFraction(entry.state)
         let isBreak = entry.state?.isBreak == true
         let accent = isBreak ? palette.breakAccent : (entry.state?.accent ?? palette.primary)
-        let tintOpacity = colorScheme == .dark ? 0.14 : 0.08
+        let tintOpacity = colorScheme == .dark ? 0.2 : 0.12
         let surfaceTint = accent.opacity(tintOpacity)
+        let baseOpacity = colorScheme == .dark ? 0.9 : 0.92
 
         ZStack {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(
                     LinearGradient(
-                        colors: [palette.surface, palette.surfaceAlt, surfaceTint],
+                        colors: [
+                            palette.surface.opacity(baseOpacity),
+                            palette.surfaceAlt.opacity(baseOpacity),
+                            surfaceTint
+                        ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
@@ -207,7 +244,7 @@ struct FocusBlocksWidgetEntryView: View {
 
                     Spacer()
 
-                    Text(entry.state?.isPaused == true ? "Paused" : "Running")
+                    Text(entry.state?.isComplete == true ? "Completed" : (entry.state?.isPaused == true ? "Paused" : "Running"))
                         .font(.system(size: 10, weight: .medium))
                         .foregroundStyle(entry.state?.isPaused == true ? palette.textPrimary : palette.textSecondary)
                         .padding(.horizontal, 8)
@@ -223,7 +260,33 @@ struct FocusBlocksWidgetEntryView: View {
                     .foregroundStyle(palette.textPrimary)
                     .lineLimit(1)
 
-                if let remaining = entry.state?.remainingSeconds,
+                if entry.state?.isComplete == true {
+                    HStack(alignment: .center, spacing: isCompact ? 12 : 16) {
+                        ZStack {
+                            Circle()
+                                .stroke(palette.timerBackground, lineWidth: 8)
+
+                            Circle()
+                                .trim(from: 0, to: 1)
+                                .stroke(
+                                    accent,
+                                    style: StrokeStyle(lineWidth: 8, lineCap: .round)
+                                )
+                                .rotationEffect(.degrees(-90))
+                        }
+                        .frame(width: isCompact ? 48 : 56, height: isCompact ? 48 : 56)
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("00:00")
+                                .font(.system(size: isCompact ? 24 : 28, weight: .semibold, design: .rounded))
+                                .foregroundStyle(palette.textPrimary)
+                                .monospacedDigit()
+                            Text("Completed")
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundStyle(palette.textSecondary)
+                        }
+                    }
+                } else if let remaining = entry.state?.remainingSeconds,
                    let total = entry.state?.totalSeconds,
                    total > 0 {
                     HStack(alignment: .center, spacing: isCompact ? 12 : 16) {
@@ -242,7 +305,7 @@ struct FocusBlocksWidgetEntryView: View {
                         .frame(width: isCompact ? 48 : 56, height: isCompact ? 48 : 56)
 
                         VStack(alignment: .leading, spacing: 4) {
-                            if let endDate = entry.state?.endDate, entry.state?.isPaused == false {
+                            if let endDate = entry.state?.endDate, entry.state?.isPaused == false, remaining > 0 {
                                 Text(endDate, style: .timer)
                                     .font(.system(size: isCompact ? 24 : 28, weight: .semibold, design: .rounded))
                                     .foregroundStyle(palette.textPrimary)
@@ -267,7 +330,7 @@ struct FocusBlocksWidgetEntryView: View {
             }
             .padding(isCompact ? 14 : 16)
         }
-        .background(palette.background)
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .modifier(WidgetBackground(palette: palette))
     }
 
@@ -338,6 +401,7 @@ private struct WidgetPalette {
         border: Color(hex: "#3D352C"),
         timerBackground: Color(hex: "#3D352C")
     )
+
 }
 
 private struct WidgetBackground: ViewModifier {
@@ -387,7 +451,8 @@ struct FocusBlocksWidgetBundle: WidgetBundle {
             endDate: Date().addingTimeInterval(420),
             isPaused: false,
             accent: .orange,
-            isBreak: false
+            isBreak: false,
+            isComplete: false
         )
     )
 }
@@ -406,7 +471,8 @@ struct FocusBlocksWidgetBundle: WidgetBundle {
             endDate: Date().addingTimeInterval(120),
             isPaused: true,
             accent: .orange,
-            isBreak: true
+            isBreak: true,
+            isComplete: false
         )
     )
 }

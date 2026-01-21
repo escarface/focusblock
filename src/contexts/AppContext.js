@@ -300,6 +300,9 @@ export function AppProvider({ children }) {
     // Asegurar que el servicio también se detenga
     timerService?.stop();
 
+    // Sync cleared state to widget/watch
+    SharedDataService.updateTimerState(initialState.timerState, null);
+
     await storage.clearTimerState();
     dispatch({ type: ACTIONS.SET_TIMER_STATE, payload: initialState.timerState });
   }, []);
