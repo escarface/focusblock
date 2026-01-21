@@ -290,6 +290,18 @@ After upload completes:
 
 ## Troubleshooting
 
+### Expo Go Error: Worklets Mismatch (0.7.x vs 0.5.x)
+
+**Symptom**: Metro logs show `WorkletsError: Mismatch between JavaScript part and native part of Worklets`.
+
+**Cause**: Expo Go (native) and JS dependencies are out of sync. In this repo, Expo Go SDK 54 expects Worklets 0.5.x.
+
+**Solution**:
+1. Reinstall Expo Go in the simulator (delete app, then open from `npx expo start -c`).
+2. Keep JS in sync by pinning Worklets to 0.5.1:
+   - `package.json` includes `"overrides": { "react-native-worklets": "0.5.1" }`
+   - Run `npm install` after any dependency updates.
+
 ### Widget Not Updating
 
 **Symptom**: Widget shows "No timer" even when timer is running

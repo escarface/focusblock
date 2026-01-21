@@ -15,12 +15,18 @@ export class SharedDataService {
   static updateTimerState(timerState, activeBlock) {
     // Only run on iOS and if native module is available
     if (Platform.OS !== 'ios' || !SharedDataBridge) {
+      console.log('[SharedDataService] Skipped - Platform:', Platform.OS, 'Bridge available:', !!SharedDataBridge);
       return;
     }
+
+    console.log('[SharedDataService] Timer state:', timerState);
+    console.log('[SharedDataService] Active block:', activeBlock);
 
     const sharedData = {
       blockId: timerState.blockId || null,
       blockTitle: activeBlock?.title || 'No active timer',
+      blockColor: activeBlock?.color || null,
+      blockCategory: activeBlock?.category || null,
       duration: activeBlock?.duration || 0,
       isRunning: timerState.isRunning || false,
       isPaused: timerState.isPaused || false,
@@ -31,10 +37,10 @@ export class SharedDataService {
     };
 
     try {
-      SharedDataBridge.updateSharedTimerState(sharedData);
-      console.log('[SharedDataService] Updated shared timer state:', sharedData);
+      SharedDataBridge.writeTimerState(sharedData);
+      console.log('[SharedDataService] ✅ Successfully updated shared timer state:', sharedData);
     } catch (error) {
-      console.error('[SharedDataService] Failed to update shared state:', error);
+      console.error('[SharedDataService] ❌ Failed to update shared state:', error);
     }
   }
 }
