@@ -1,48 +1,17 @@
-# Plan de Mejoras FocusBlocks
+# FocusBlocks UI Modernization - Plan Index
 
-Plan estructurado en fases con tareas marcables.
+Este directorio contiene el plan de trabajo y los entregables de la modernización UI (iOS-first, estilo premium).
 
-## Estructura
+## Orden recomendado
+1. ROADMAP.md
+2. WORKSTREAMS.md
+3. CHECKLIST.md
+4. RISKS.md
+5. ACCEPTANCE.md
 
-```
-PLAN/
-├── README.md (este archivo)
-├── FASE-1-Timer-Completion.md
-├── FASE-2-History-Debug.md
-└── FASE-3-Calendario-Mensual.md
-```
-
-## Estado General
-
-- [ ] Fase 1: Arreglar Timer Completion (3 tareas)
-- [ ] Fase 2: Debug History (3 tareas)
-- [ ] Fase 3: Calendario Mensual (7 tareas)
-
-**Total:** 13 tareas
-
-## Problemas a Resolver
-
-1. ❌ Timer no se para al llegar a 0
-2. ❌ History no muestra tareas completadas
-3. ✅ Marcar como completada al llegar a 0 (mejorar implementación)
-4. 📅 Reemplazar streak por calendario mensual/semanal
-
-## Cómo Usar Este Plan
-
-1. Lee cada archivo de fase en orden
-2. Completa las tareas marcando `[x]` cuando termines
-3. Verifica con los tests al final de cada fase
-4. Actualiza este README con el progreso general
-
-## Archivos Críticos
-
-### Alta Prioridad
-- `src/screens/TimerScreen.js` - Timer completion flow
-- `src/services/TimerService.js` - Timer service
-- `src/contexts/AppContext.js` - Estado global
-- `src/screens/HistoryScreen.js` - Pantalla de historial
-
-### Media Prioridad
-- `src/storage/index.js` - Persistencia
-- `src/utils/statistics.js` - Utilidades de calendario
-- `src/components/Toggle.js` - Componente toggle
+## Archivos
+- ROADMAP.md: fases, dependencias y secuencia.
+- WORKSTREAMS.md: tareas técnicas por stream.
+- CHECKLIST.md: checklist ejecutable por sprint.
+- RISKS.md: riesgos y mitigaciones.
+- ACCEPTANCE.md: criterios de aceptación y QA.
