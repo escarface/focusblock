@@ -15,6 +15,7 @@ export default function Input({
   placeholder,
   label,
   error,
+  success = false,
   icon,
   iconRight,
   secureTextEntry,
@@ -31,11 +32,22 @@ export default function Input({
   const [isFocused, setIsFocused] = useState(false);
 
   const Container = onPress ? TouchableOpacity : View;
+  const isEditable = editable && !onPress;
+  const borderColor = error
+    ? colors.error
+    : success
+    ? colors.success
+    : isFocused
+    ? colors.state.focusRing
+    : colors.border;
 
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, { marginBottom: spacing.gapMd }, style]}>
       {label && (
-        <Text style={[styles.label, { color: colors.textPrimary }]}>
+        <Text
+          selectable
+          style={[styles.label, { color: colors.textPrimary, marginBottom: spacing.xs }]}
+        >
           {label}
         </Text>
       )}
@@ -45,17 +57,22 @@ export default function Input({
         style={[
           styles.inputContainer,
           {
-            backgroundColor: colors.surface,
-            borderColor: error
-              ? colors.error
-              : isFocused
-              ? colors.primary
-              : colors.border,
+            backgroundColor: isEditable
+              ? colors.surface
+              : colors.state.disabledBackground,
+            borderColor,
             borderWidth: isFocused ? 2 : 1,
+            borderRadius: spacing.inputRadius,
+            paddingHorizontal: spacing.inputPadding,
+            minHeight: spacing.inputHeight,
           },
         ]}
       >
-        {icon && <View style={styles.iconLeft}>{icon}</View>}
+        {icon && (
+          <View style={[styles.iconLeft, { marginRight: spacing.sm }]}>
+            {icon}
+          </View>
+        )}
         <TextInput
           value={value}
           onChangeText={onChangeText}
@@ -66,23 +83,32 @@ export default function Input({
           numberOfLines={numberOfLines}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
-          editable={editable && !onPress}
+          editable={isEditable}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           style={[
             styles.input,
             {
-              color: colors.textPrimary,
+              color: isEditable ? colors.textPrimary : colors.state.disabledText,
               minHeight: multiline ? 80 : undefined,
               textAlignVertical: multiline ? 'top' : 'center',
             },
             inputStyle,
           ]}
         />
-        {iconRight && <View style={styles.iconRight}>{iconRight}</View>}
+        {iconRight && (
+          <View style={[styles.iconRight, { marginLeft: spacing.sm }]}>
+            {iconRight}
+          </View>
+        )}
       </Container>
       {error && (
-        <Text style={[styles.error, { color: colors.error }]}>{error}</Text>
+        <Text
+          selectable
+          style={[styles.error, { color: colors.error, marginTop: spacing.xs }]}
+        >
+          {error}
+        </Text>
       )}
     </View>
   );
@@ -90,19 +116,17 @@ export default function Input({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: 0,
   },
   label: {
     fontSize: 15,
     fontWeight: '500',
-    marginBottom: 8,
+    marginBottom: 0,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    minHeight: 56,
+    borderCurve: 'continuous',
   },
   input: {
     flex: 1,
@@ -110,10 +134,10 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   iconLeft: {
-    marginRight: 12,
+    marginRight: 0,
   },
   iconRight: {
-    marginLeft: 12,
+    marginLeft: 0,
   },
   error: {
     fontSize: 13,

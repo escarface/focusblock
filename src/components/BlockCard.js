@@ -14,8 +14,13 @@ export default function BlockCard({
   block,
   isActive = false,
   onPress,
+  onLongPress,
+  delayLongPress = 350,
   onPlayPress,
   showPlayButton = true,
+  density = 'default', // default, compact
+  entering,
+  exiting,
   style,
   index = 0,
 }) {
@@ -23,6 +28,13 @@ export default function BlockCard({
 
   const tagColor = tagColors.find(t => t.id === block.color)?.color || colors.primary;
   const category = categories.find(c => c.id === block.category);
+  const isCompact = density === 'compact';
+  const contentSpacing = isCompact ? spacing.sm : spacing.md;
+  const cardPadding = isCompact ? spacing.cardPaddingCompact : spacing.cardPadding;
+  const playButtonSize = isCompact ? 36 : 44;
+  const titleSize = isCompact ? 15 : 16;
+  const metaSize = isCompact ? 12 : 13;
+  const accessibilityLabel = `${block.title}. ${formatDuration(block.duration)}. ${category?.label || 'Block'}`;
 
   const getCategoryIcon = () => {
     switch (block.category) {
@@ -41,18 +53,28 @@ export default function BlockCard({
 
   return (
     <AnimatedTouchable
-      entering={cardEntering}
-      exiting={cardExiting}
+      entering={entering ?? cardEntering}
+      exiting={exiting ?? cardExiting}
       style={[
         styles.container,
         {
           backgroundColor: isActive ? colors.blockActive : colors.blockDefault,
           borderLeftColor: tagColor,
+          borderColor: isActive ? tagColor : colors.border,
+          borderRadius: spacing.cardRadius,
+          padding: cardPadding,
+          gap: contentSpacing,
+          marginBottom: spacing.sm,
         },
         style,
       ]}
       onPress={onPress}
+      onLongPress={onLongPress}
+      delayLongPress={delayLongPress}
       activeOpacity={0.7}
+      accessibilityRole={onPress || onLongPress ? 'button' : undefined}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={onLongPress ? 'Long press for more options' : undefined}
     >
       {showPlayButton && (
         <TouchableOpacity
@@ -60,41 +82,57 @@ export default function BlockCard({
             styles.playButton,
             {
               backgroundColor: isActive ? tagColor : colors.backgroundSecondary,
+              width: playButtonSize,
+              height: playButtonSize,
+              borderRadius: isCompact
+                ? spacing.buttonRadiusSmall
+                : spacing.cardRadiusSmall,
             },
           ]}
           onPress={onPlayPress}
           activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel={isActive ? 'Pause block' : 'Start block'}
         >
           <SymbolIcon
             name={isActive ? 'pause' : getCategoryIcon()}
             color={isActive ? '#FFF' : colors.textSecondary}
-            size={20}
+            size={isCompact ? 18 : 20}
           />
         </TouchableOpacity>
       )}
 
       <View style={styles.content}>
         <Text
-          style={[styles.title, { color: colors.textPrimary }]}
+          style={[
+            styles.title,
+            { color: colors.textPrimary, fontSize: titleSize, marginBottom: spacing.xxs },
+          ]}
           numberOfLines={1}
         >
           {block.title}
         </Text>
         <View style={styles.details}>
           {block.scheduledTime && (
-            <Text style={[styles.time, { color: colors.textSecondary }]}>
+            <Text
+              style={[styles.time, { color: colors.textSecondary, fontSize: metaSize }]}
+            >
               {formatScheduledTime(block.scheduledTime)}
             </Text>
           )}
           {block.scheduledTime && (
-            <Text style={[styles.dot, { color: colors.textMuted }]}>•</Text>
+            <Text style={[styles.dot, { color: colors.textMuted, fontSize: metaSize }]}>
+              •
+            </Text>
           )}
           {isActive ? (
             <Text style={[styles.activeLabel, { color: tagColor }]}>
               ACTIVE NOW
             </Text>
           ) : (
-            <Text style={[styles.duration, { color: colors.textSecondary }]}>
+            <Text
+              style={[styles.duration, { color: colors.textSecondary, fontSize: metaSize }]}
+            >
               {formatDuration(block.duration)}
             </Text>
           )}
@@ -122,28 +160,22 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    borderRadius: 16,
+    borderRadius: 0,
     borderCurve: 'continuous',
-    marginBottom: 12,
     borderLeftWidth: 4,
+    borderWidth: 1,
   },
   playButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
     borderCurve: 'continuous',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 14,
   },
   content: {
     flex: 1,
   },
   title: {
-    fontSize: 16,
     fontWeight: '600',
-    marginBottom: 4,
+    marginBottom: 0,
   },
   details: {
     flexDirection: 'row',

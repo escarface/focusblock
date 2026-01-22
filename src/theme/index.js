@@ -18,7 +18,7 @@ export const tagColors = [
   { id: 'yellow', color: '#E5B85C' },
   { id: 'pink', color: '#D4918A' },
   { id: 'green', color: '#8BA888' },
-  { id: 'orange', color: '#D4714A' },
+  { id: 'orange', color: '#D9704A' },
   { id: 'gray', color: '#9B9082' },
 ];
 

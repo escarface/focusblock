@@ -102,3 +102,7 @@ src/
 
 ### Context7
 When searching for documentation (React Native, Expo, React, etc.), use the `context7` MCP tool.
+
+### Skills
+
+Use any skill that you deem necessary to help with development tasks, such as code generation, debugging, or optimization.

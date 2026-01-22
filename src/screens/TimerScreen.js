@@ -1,13 +1,18 @@
 // FocusBlocks Timer/Today Screen
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useLayoutEffect, useState, useEffect, useCallback, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
+  FlatList,
+  Pressable,
   TouchableOpacity,
-  AppState,
+  Modal,
+  Platform,
+  ActionSheetIOS,
 } from 'react-native';
+import { BlurView } from 'expo-blur';
+import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../contexts/ThemeContext';
 import { useApp } from '../contexts/AppContext';
@@ -17,12 +22,14 @@ import {
   SymbolIcon,
   EmptyState,
 } from '../components';
-import { formatTime } from '../utils';
+import { formatDuration, formatTime } from '../utils';
 import { timerService } from '../services/TimerService';
 import { notificationService } from '../services/NotificationService';
+import { listItemEntering } from '../utils/animations';
+import { categories, tagColors } from '../theme';
 
 export default function TimerScreen({ navigation }) {
-  const { colors, spacing } = useTheme();
+  const { colors, spacing, isDark } = useTheme();
   const {
     blocks,
     timerState,
@@ -38,9 +45,57 @@ export default function TimerScreen({ navigation }) {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [displayElapsed, setDisplayElapsed] = useState(0);
   const [notificationId, setNotificationId] = useState(null);
+  const [previewBlock, setPreviewBlock] = useState(null);
   const timerInitialized = useRef(false);
   const handleCompleteRef = useRef(null);
   const handleTickRef = useRef(null);
+  const hapticStyles = useRef({
+    start: Haptics.ImpactFeedbackStyle.Medium,
+    pause: Haptics.ImpactFeedbackStyle.Light,
+    reset: Haptics.ImpactFeedbackStyle.Light,
+    skip: Haptics.ImpactFeedbackStyle.Medium,
+  });
+
+  const triggerHaptic = useCallback(async (key) => {
+    if (process.env.EXPO_OS !== 'ios') return;
+    try {
+      await Haptics.impactAsync(hapticStyles.current[key]);
+    } catch (error) {
+      console.error('Timer haptics failed:', error);
+    }
+  }, []);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      title: 'Today',
+      headerLargeTitle: true,
+      headerShadowVisible: false,
+      headerLargeTitleShadowVisible: false,
+      headerStyle: { backgroundColor: colors.background },
+      headerTitleStyle: { color: colors.textPrimary },
+      headerLargeTitleStyle: { color: colors.textPrimary },
+      headerRight: () => (
+        <Pressable
+          onPress={() => navigation.navigate('Settings')}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Settings"
+          style={({ pressed }) => [
+            styles.headerButton,
+            pressed && styles.headerButtonPressed,
+          ]}
+        >
+          <SymbolIcon
+            name="settings"
+            color={colors.textPrimary}
+            size={17}
+            weight="semibold"
+          />
+        </Pressable>
+      ),
+    });
+  }, [colors, navigation]);
 
   // Get today's pending blocks
   const todayBlocks = getPendingBlocks();
@@ -139,6 +194,7 @@ export default function TimerScreen({ navigation }) {
 
   // Start a block
   const startBlock = async (block) => {
+    await triggerHaptic('start');
     // Stop any existing timer
     timerService.stop();
 
@@ -205,6 +261,7 @@ export default function TimerScreen({ navigation }) {
   const pauseTimer = async () => {
     if (!timerState.isRunning || timerState.isPaused) return;
 
+    await triggerHaptic('pause');
     timerService.pause();
 
     const now = new Date().toISOString();
@@ -231,6 +288,7 @@ export default function TimerScreen({ navigation }) {
   const resumeTimer = async () => {
     if (!timerState.isPaused || !activeBlock) return;
 
+    await triggerHaptic('start');
     // Calculate paused duration
     const pauseStart = new Date(timerState.pauseTimestamp).getTime();
     const now = Date.now();
@@ -270,6 +328,7 @@ export default function TimerScreen({ navigation }) {
   const resetTimer = async () => {
     if (!activeBlock) return;
 
+    await triggerHaptic('reset');
     timerService.stop();
 
     // Cancel notification
@@ -291,6 +350,7 @@ export default function TimerScreen({ navigation }) {
   const skipBlock = async () => {
     if (!activeBlock) return;
 
+    await triggerHaptic('skip');
     // Record skip event
     await addSession({
       blockId: activeBlock.id,
@@ -327,164 +387,300 @@ export default function TimerScreen({ navigation }) {
     navigation.navigate('BlockDetail', { blockId: block.id });
   };
 
+  const previewTagColor = previewBlock
+    ? tagColors.find(t => t.id === previewBlock.color)?.color || colors.primary
+    : colors.primary;
+  const previewCategory = previewBlock
+    ? categories.find(c => c.id === previewBlock.category)
+    : null;
+
+  const handleBlockContextMenu = useCallback(
+    async (block) => {
+      if (Platform.OS !== 'ios') return;
+
+      try {
+        await Haptics.selectionAsync();
+      } catch (error) {
+        console.error('Context menu haptics failed:', error);
+      }
+
+      const isActive = block.id === timerState.blockId;
+      const isRunning = isActive && timerState.isRunning && !timerState.isPaused;
+      const isPaused = isActive && timerState.isPaused;
+      const primaryActionLabel = isRunning ? 'Pause' : isPaused ? 'Resume' : 'Start';
+
+      const options = ['Preview', primaryActionLabel, 'Open Details', 'Edit', 'Cancel'];
+      const cancelButtonIndex = 4;
+
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options,
+          cancelButtonIndex,
+          userInterfaceStyle: isDark ? 'dark' : 'light',
+        },
+        (buttonIndex) => {
+          if (buttonIndex === 0) {
+            setPreviewBlock(block);
+          } else if (buttonIndex === 1) {
+            if (isRunning) {
+              pauseTimer();
+            } else if (isPaused) {
+              resumeTimer();
+            } else {
+              startBlock(block);
+            }
+          } else if (buttonIndex === 2) {
+            openBlockDetail(block);
+          } else if (buttonIndex === 3) {
+            openEditBlock(block);
+          }
+        }
+      );
+    },
+    [isDark, navigation, openEditBlock, openBlockDetail, pauseTimer, resumeTimer, startBlock, timerState]
+  );
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <ScrollView
+      <FlatList
+        data={todayBlocks}
+        keyExtractor={(item) => item.id}
+        contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingTop: insets.top + 16 },
+          {
+            paddingTop: spacing.sm,
+            paddingBottom: insets.bottom + spacing.xxxl,
+            paddingHorizontal: spacing.screenHorizontal,
+          },
         ]}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
-            Today
-          </Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Settings')}
-            style={styles.headerButton}
-          >
-            <SymbolIcon name="settings" color={colors.textSecondary} size={24} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Timer Section */}
-        <View style={styles.timerSection}>
-          <CircularProgress
-            size={260}
-            strokeWidth={14}
-            progress={progress}
-          >
-            <Text style={[styles.timerText, { color: colors.timerText }]}>
-              {formatTime(remainingSeconds)}
-            </Text>
-            {timerState.isRunning && !timerState.isPaused && activeBlock && (
-              <>
-                <Text
-                  style={[styles.blockTitle, { color: colors.textSecondary }]}
-                  numberOfLines={1}
-                >
-                  {activeBlock.title}
+        ListHeaderComponent={
+          <>
+            {/* Timer Section */}
+            <View style={styles.timerSection}>
+              <CircularProgress
+                size={260}
+                strokeWidth={14}
+                progress={progress}
+                pulse={timerState.isRunning && !timerState.isPaused && !!activeBlock}
+              >
+                <Text style={[styles.timerText, { color: colors.timerText }]}>
+                  {formatTime(remainingSeconds)}
                 </Text>
-                <View
-                  style={[
-                    styles.focusBadge,
-                    { backgroundColor: colors.blockActive },
-                  ]}
-                >
-                  <View
-                    style={[styles.focusDot, { backgroundColor: colors.primary }]}
+                {timerState.isRunning && !timerState.isPaused && activeBlock && (
+                  <>
+                    <Text
+                      style={[styles.blockTitle, { color: colors.textSecondary }]}
+                      numberOfLines={1}
+                    >
+                      {activeBlock.title}
+                    </Text>
+                    <View
+                      style={[
+                        styles.focusBadge,
+                        { backgroundColor: colors.blockActive },
+                      ]}
+                    >
+                      <View
+                        style={[styles.focusDot, { backgroundColor: colors.primary }]}
+                      />
+                      <Text
+                        style={[styles.focusText, { color: colors.primary }]}
+                      >
+                        FOCUS MODE
+                      </Text>
+                    </View>
+                  </>
+                )}
+              </CircularProgress>
+
+              {/* Timer Controls */}
+              <View style={styles.controls}>
+              <TouchableOpacity
+                style={styles.controlButton}
+                onPress={resetTimer}
+                disabled={!activeBlock}
+                accessibilityRole="button"
+                accessibilityLabel="Reset timer"
+                accessibilityState={{ disabled: !activeBlock }}
+              >
+                  <SymbolIcon
+                    name="reset"
+                    color={activeBlock ? colors.textSecondary : colors.textMuted}
+                    size={28}
                   />
-                  <Text style={[styles.focusText, { color: colors.primary }]}>
-                    FOCUS MODE
-                  </Text>
-                </View>
-              </>
-            )}
-          </CircularProgress>
+                </TouchableOpacity>
 
-          {/* Timer Controls */}
-          <View style={styles.controls}>
-            <TouchableOpacity
-              style={styles.controlButton}
-              onPress={resetTimer}
-              disabled={!activeBlock}
-            >
-              <SymbolIcon
-                name="reset"
-                color={activeBlock ? colors.textSecondary : colors.textMuted}
-                size={28}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.playButton, { backgroundColor: colors.textPrimary }]}
-              onPress={() => {
-                if (!activeBlock && todayBlocks.length > 0) {
-                  startBlock(todayBlocks[0]);
-                } else if (timerState.isPaused) {
-                  resumeTimer();
-                } else if (timerState.isRunning) {
-                  pauseTimer();
-                }
-              }}
-              disabled={!activeBlock && todayBlocks.length === 0}
-            >
-              <SymbolIcon
-                name={timerState.isRunning && !timerState.isPaused ? 'pause' : 'play'}
-                color={colors.background}
-                size={32}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.controlButton}
-              onPress={skipBlock}
-              disabled={!activeBlock}
-            >
-              <SymbolIcon
-                name="skip"
-                color={activeBlock ? colors.textSecondary : colors.textMuted}
-                size={28}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Drag handle indicator */}
-        <View style={styles.handleContainer}>
-          <View style={[styles.handle, { backgroundColor: colors.border }]} />
-        </View>
-
-        {/* Up Next Section */}
-        <View style={styles.upNextSection}>
-          <View style={styles.upNextHeader}>
-            <Text style={[styles.upNextTitle, { color: colors.textPrimary }]}>
-              Up Next
-            </Text>
-            <View
-              style={[styles.countBadge, { backgroundColor: colors.backgroundSecondary }]}
-            >
-              <Text style={[styles.countText, { color: colors.textSecondary }]}>
-                {todayBlocks.length} blocks
-              </Text>
-            </View>
-          </View>
-
-          {todayBlocks.length === 0 ? (
-            <EmptyState
-              title="No blocks yet"
-              message="Create your first focus block to get started"
-              buttonTitle="Add Block"
-              onButtonPress={() => openEditBlock()}
-            />
-          ) : (
-            todayBlocks.map((block) => (
-              <BlockCard
-                key={block.id}
-                block={block}
-                isActive={block.id === timerState.blockId}
-                onPress={() => openBlockDetail(block)}
-                onPlayPress={() => {
-                  if (block.id === timerState.blockId) {
-                    if (timerState.isPaused) resumeTimer();
-                    else if (timerState.isRunning) pauseTimer();
-                  } else {
-                    startBlock(block);
+              <TouchableOpacity
+                style={[
+                  styles.playButton,
+                  { backgroundColor: colors.textPrimary },
+                ]}
+                onPress={() => {
+                  if (!activeBlock && todayBlocks.length > 0) {
+                    startBlock(todayBlocks[0]);
+                  } else if (timerState.isPaused) {
+                    resumeTimer();
+                  } else if (timerState.isRunning) {
+                    pauseTimer();
                   }
                 }}
-              />
-            ))
+                disabled={!activeBlock && todayBlocks.length === 0}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  timerState.isRunning && !timerState.isPaused
+                    ? 'Pause timer'
+                    : timerState.isPaused
+                    ? 'Resume timer'
+                    : 'Start timer'
+                }
+                accessibilityState={{
+                  disabled: !activeBlock && todayBlocks.length === 0,
+                }}
+              >
+                  <SymbolIcon
+                    name={
+                      timerState.isRunning && !timerState.isPaused
+                        ? 'pause'
+                        : 'play'
+                    }
+                    color={colors.background}
+                    size={32}
+                  />
+                </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.controlButton}
+                onPress={skipBlock}
+                disabled={!activeBlock}
+                accessibilityRole="button"
+                accessibilityLabel="Skip block"
+                accessibilityState={{ disabled: !activeBlock }}
+              >
+                  <SymbolIcon
+                    name="skip"
+                    color={activeBlock ? colors.textSecondary : colors.textMuted}
+                    size={28}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Drag handle indicator */}
+            <View style={styles.handleContainer}>
+              <View style={[styles.handle, { backgroundColor: colors.border }]} />
+            </View>
+
+            {/* Up Next Section */}
+            <View style={styles.upNextHeader}>
+              <Text style={[styles.upNextTitle, { color: colors.textPrimary }]}>
+                Up Next
+              </Text>
+              <View
+                style={[
+                  styles.countBadge,
+                  { backgroundColor: colors.backgroundSecondary },
+                ]}
+              >
+                <Text style={[styles.countText, { color: colors.textSecondary }]}>
+                  {todayBlocks.length} blocks
+                </Text>
+              </View>
+            </View>
+          </>
+        }
+        ListEmptyComponent={
+          <EmptyState
+            title="No blocks yet"
+            message="Create your first focus block to get started"
+            buttonTitle="Add Block"
+            onButtonPress={() => openEditBlock()}
+          />
+        }
+        renderItem={({ item, index }) => (
+          <BlockCard
+            block={item}
+            isActive={item.id === timerState.blockId}
+            density="compact"
+            entering={listItemEntering(index)}
+            onPress={() => openBlockDetail(item)}
+            onLongPress={() => handleBlockContextMenu(item)}
+            onPlayPress={() => {
+              if (item.id === timerState.blockId) {
+                if (timerState.isPaused) resumeTimer();
+                else if (timerState.isRunning) pauseTimer();
+              } else {
+                startBlock(item);
+              }
+            }}
+          />
+        )}
+        showsVerticalScrollIndicator={false}
+      />
+
+      <Modal
+        visible={!!previewBlock}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setPreviewBlock(null)}
+      >
+        <TouchableOpacity
+          style={styles.previewOverlay}
+          activeOpacity={1}
+          onPress={() => setPreviewBlock(null)}
+        >
+          {Platform.OS === 'ios' ? (
+            <BlurView
+              intensity={isDark ? 70 : 60}
+              tint={isDark ? 'dark' : 'light'}
+              style={StyleSheet.absoluteFill}
+            />
+          ) : (
+            <View style={[StyleSheet.absoluteFill, { backgroundColor: colors.shadow }]} />
           )}
-        </View>
-      </ScrollView>
+          <TouchableOpacity
+            activeOpacity={1}
+            style={[
+              styles.previewCard,
+              {
+                backgroundColor: isDark
+                  ? 'rgba(26, 26, 26, 0.9)'
+                  : 'rgba(255, 255, 255, 0.92)',
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.previewTag,
+                { backgroundColor: previewTagColor },
+              ]}
+            />
+            <Text style={[styles.previewTitle, { color: colors.textPrimary }]}>
+              {previewBlock?.title}
+            </Text>
+            <Text style={[styles.previewMeta, { color: colors.textSecondary }]}>
+              {formatDuration(previewBlock?.duration || 0)}
+              {previewCategory ? ` • ${previewCategory.label}` : ''}
+            </Text>
+            {!!previewBlock?.notes && (
+              <Text
+                style={[styles.previewNotes, { color: colors.textSecondary }]}
+                numberOfLines={3}
+              >
+                {previewBlock.notes}
+              </Text>
+            )}
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
 
       {/* Floating Add Button */}
       <TouchableOpacity
         style={[styles.fab, { backgroundColor: colors.primary }]}
         onPress={() => openEditBlock()}
         activeOpacity={0.8}
+        accessibilityRole="button"
+        accessibilityLabel="Add block"
       >
         <SymbolIcon name="plus" color="#FFF" size={28} />
       </TouchableOpacity>
@@ -498,23 +694,15 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 24,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: '700',
   },
   headerButton: {
-    width: 44,
-    height: 44,
+    width: 32,
+    height: 32,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  headerButtonPressed: {
+    opacity: 0.6,
   },
   timerSection: {
     alignItems: 'center',
@@ -617,5 +805,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+  },
+  previewOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 24,
+  },
+  previewCard: {
+    borderRadius: 20,
+    borderCurve: 'continuous',
+    padding: 20,
+  },
+  previewTag: {
+    width: 36,
+    height: 6,
+    borderRadius: 3,
+    marginBottom: 12,
+  },
+  previewTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 6,
+  },
+  previewMeta: {
+    fontSize: 14,
+    marginBottom: 12,
+  },
+  previewNotes: {
+    fontSize: 14,
+    lineHeight: 20,
   },
 });

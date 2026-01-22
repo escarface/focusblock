@@ -10,6 +10,8 @@ const fontFamily = Platform.select({
 });
 
 export const typography = {
+  fontFamily,
+
   // Font weights
   fontWeights: {
     regular: '400',
@@ -42,36 +44,43 @@ export const typography = {
   styles: {
     // Headings
     h1: {
+      fontFamily,
       fontSize: 32,
       fontWeight: '700',
       letterSpacing: -0.5,
     },
     h2: {
+      fontFamily,
       fontSize: 24,
       fontWeight: '600',
       letterSpacing: -0.3,
     },
     h3: {
+      fontFamily,
       fontSize: 20,
       fontWeight: '600',
     },
     h4: {
+      fontFamily,
       fontSize: 17,
       fontWeight: '600',
     },
 
     // Body text
     bodyLarge: {
+      fontFamily,
       fontSize: 17,
       fontWeight: '400',
       lineHeight: 24,
     },
     body: {
+      fontFamily,
       fontSize: 15,
       fontWeight: '400',
       lineHeight: 22,
     },
     bodySmall: {
+      fontFamily,
       fontSize: 13,
       fontWeight: '400',
       lineHeight: 18,
@@ -79,12 +88,14 @@ export const typography = {
 
     // Labels
     label: {
+      fontFamily,
       fontSize: 13,
       fontWeight: '500',
       letterSpacing: 0.5,
       textTransform: 'uppercase',
     },
     labelSmall: {
+      fontFamily,
       fontSize: 11,
       fontWeight: '500',
       letterSpacing: 0.5,
@@ -93,11 +104,13 @@ export const typography = {
 
     // Timer
     timer: {
+      fontFamily,
       fontSize: 64,
       fontWeight: '300',
       letterSpacing: -2,
     },
     timerSmall: {
+      fontFamily,
       fontSize: 48,
       fontWeight: '300',
       letterSpacing: -1,
@@ -105,16 +118,19 @@ export const typography = {
 
     // Buttons
     button: {
+      fontFamily,
       fontSize: 17,
       fontWeight: '600',
     },
     buttonSmall: {
+      fontFamily,
       fontSize: 15,
       fontWeight: '500',
     },
 
     // Caption
     caption: {
+      fontFamily,
       fontSize: 12,
       fontWeight: '400',
     },

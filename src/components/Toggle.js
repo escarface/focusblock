@@ -1,10 +1,11 @@
 // FocusBlocks Toggle/Switch Component
-import React from 'react';
+import React, { useCallback } from 'react';
 import { TouchableOpacity, View, StyleSheet, Animated } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { useTheme } from '../contexts/ThemeContext';
 
 export default function Toggle({ value, onValueChange, disabled = false }) {
-  const { colors } = useTheme();
+  const { colors, shadows } = useTheme();
 
   const translateX = React.useRef(new Animated.Value(value ? 24 : 2)).current;
 
@@ -16,14 +17,30 @@ export default function Toggle({ value, onValueChange, disabled = false }) {
     }).start();
   }, [value]);
 
+  const handlePress = useCallback(async () => {
+    if (disabled) return;
+    if (process.env.EXPO_OS === 'ios') {
+      try {
+        await Haptics.selectionAsync();
+      } catch (error) {
+        console.error('Toggle haptics failed:', error);
+      }
+    }
+    onValueChange(!value);
+  }, [disabled, onValueChange, value]);
+
   return (
     <TouchableOpacity
-      onPress={() => !disabled && onValueChange(!value)}
+      onPress={handlePress}
       activeOpacity={0.8}
       style={[
         styles.container,
         {
-          backgroundColor: value ? colors.primary : colors.border,
+          backgroundColor: disabled
+            ? colors.state.disabledBackground
+            : value
+            ? colors.primary
+            : colors.border,
           opacity: disabled ? 0.5 : 1,
         },
       ]}
@@ -31,6 +48,7 @@ export default function Toggle({ value, onValueChange, disabled = false }) {
       <Animated.View
         style={[
           styles.thumb,
+          shadows.small,
           {
             backgroundColor: '#FFFFFF',
             transform: [{ translateX }],
@@ -52,10 +70,5 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
   },
 });

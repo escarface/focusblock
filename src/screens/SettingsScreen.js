@@ -11,10 +11,10 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../contexts/ThemeContext';
 import { useApp } from '../contexts/AppContext';
-import { Header, Toggle, SymbolIcon } from '../components';
+import { Toggle, SymbolIcon } from '../components';
 
 export default function SettingsScreen({ navigation }) {
-  const { colors } = useTheme();
+  const { colors, spacing } = useTheme();
   const { settings, updateSettings } = useApp();
   const insets = useSafeAreaInsets();
 
@@ -52,13 +52,16 @@ export default function SettingsScreen({ navigation }) {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Header
-        title="Settings"
-        leftAction={() => navigation.goBack()}
-      />
-
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentInsetAdjustmentBehavior="automatic"
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingHorizontal: spacing.screenHorizontal,
+            paddingTop: spacing.sm,
+            paddingBottom: insets.bottom + spacing.xxxl,
+          },
+        ]}
         showsVerticalScrollIndicator={false}
       >
         {/* General Section */}
@@ -165,8 +168,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
+    paddingHorizontal: 0,
+    paddingBottom: 0,
   },
   section: {
     marginBottom: 24,

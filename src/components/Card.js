@@ -1,16 +1,19 @@
 // FocusBlocks Card Component
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
 
 export default function Card({
   children,
   onPress,
+  onLongPress,
+  delayLongPress,
   style,
   variant = 'default', // default, active, elevated
   padding = true,
 }) {
-  const { colors, spacing, shadows, isDark } = useTheme();
+  const { colors, spacing, shadows } = useTheme();
+  const [isPressed, setIsPressed] = useState(false);
 
   const getBackgroundColor = () => {
     switch (variant) {
@@ -19,25 +22,39 @@ export default function Card({
       case 'elevated':
         return colors.surface;
       default:
-        return isDark ? colors.surface : colors.blockDefault;
+        return colors.blockDefault;
     }
   };
 
-  const Container = onPress ? TouchableOpacity : View;
+  const Container = onPress || onLongPress ? TouchableOpacity : View;
+  const baseBackground = getBackgroundColor();
+  const pressedBackground = isPressed
+    ? variant === 'active'
+      ? colors.blockActive
+      : colors.backgroundSecondary
+    : baseBackground;
+
+  const handlePressIn = useCallback(() => setIsPressed(true), []);
+  const handlePressOut = useCallback(() => setIsPressed(false), []);
 
   return (
     <Container
       onPress={onPress}
+      onLongPress={onLongPress}
+      delayLongPress={delayLongPress}
+      onPressIn={onPress ? handlePressIn : undefined}
+      onPressOut={onPress ? handlePressOut : undefined}
       activeOpacity={0.7}
       style={[
         styles.card,
         {
-          backgroundColor: getBackgroundColor(),
+          backgroundColor: pressedBackground,
           padding: padding ? spacing.cardPadding : 0,
-          borderWidth: isDark ? 1 : 0,
-          borderColor: isDark ? colors.border : 'transparent',
+          borderRadius: spacing.cardRadius,
+          borderWidth: 1,
+          borderColor: colors.border,
         },
-        variant === 'elevated' && shadows.medium,
+        variant === 'elevated' ? shadows.medium : shadows.small,
         style,
       ]}
     >
@@ -48,7 +65,7 @@ export default function Card({
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 16,
+    borderRadius: 0,
     borderCurve: 'continuous',
     overflow: 'hidden',
   },

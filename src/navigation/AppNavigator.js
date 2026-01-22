@@ -1,13 +1,15 @@
 // FocusBlocks App Navigator
 // Main navigation structure
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Platform, View, Text } from 'react-native';
+import { Animated, Easing, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Image } from 'expo-image';
 
 import { useApp } from '../contexts/AppContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -27,6 +29,7 @@ import { TabSymbolIcon } from '../components/SymbolIcon';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 // Tab Navigator
 function TabNavigator() {
@@ -127,13 +130,24 @@ function TabNavigator() {
 function TimerStackNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="TimerMain" component={TimerScreen} />
+      <Stack.Screen
+        name="TimerMain"
+        component={TimerScreen}
+        options={{ headerShown: true }}
+      />
       <Stack.Screen
         name="EditBlock"
         component={EditBlockScreen}
         options={{
-          presentation: 'modal',
-          animation: 'slide_from_bottom',
+          headerShown: false,
+          presentation: Platform.OS === 'ios' ? 'formSheet' : 'modal',
+          animation: Platform.OS === 'ios' ? 'default' : 'slide_from_bottom',
+          sheetGrabberVisible: true,
+          sheetAllowedDetents: [0.6, 1.0],
+          sheetInitialDetentIndex: 1,
+          sheetLargestUndimmedDetentIndex: 0,
+          sheetCornerRadius: 28,
+          contentStyle: Platform.OS === 'ios' ? { backgroundColor: 'transparent' } : undefined,
         }}
       />
       <Stack.Screen name="BlockDetail" component={BlockDetailScreen} />
@@ -145,14 +159,25 @@ function TimerStackNavigator() {
 function ProjectsStackNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="ProjectsList" component={ProjectsScreen} />
+      <Stack.Screen
+        name="ProjectsList"
+        component={ProjectsScreen}
+        options={{ headerShown: true }}
+      />
       <Stack.Screen name="ProjectDetail" component={ProjectDetailScreen} />
       <Stack.Screen
         name="EditBlock"
         component={EditBlockScreen}
         options={{
-          presentation: 'modal',
-          animation: 'slide_from_bottom',
+          headerShown: false,
+          presentation: Platform.OS === 'ios' ? 'formSheet' : 'modal',
+          animation: Platform.OS === 'ios' ? 'default' : 'slide_from_bottom',
+          sheetGrabberVisible: true,
+          sheetAllowedDetents: [0.6, 1.0],
+          sheetInitialDetentIndex: 1,
+          sheetLargestUndimmedDetentIndex: 0,
+          sheetCornerRadius: 28,
+          contentStyle: Platform.OS === 'ios' ? { backgroundColor: 'transparent' } : undefined,
         }}
       />
       <Stack.Screen name="BlockDetail" component={BlockDetailScreen} />
@@ -206,48 +231,165 @@ function MainNavigator() {
   );
 }
 
+function LoadingScreen() {
+  const insets = useSafeAreaInsets();
+  const pulse = useRef(new Animated.Value(0)).current;
+  const textOpacity = useRef(new Animated.Value(0)).current;
+  const textOffset = useRef(new Animated.Value(8)).current;
+
+  useEffect(() => {
+    const pulseAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulse, {
+          toValue: 1,
+          duration: 1800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulse, {
+          toValue: 0,
+          duration: 1800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    pulseAnimation.start();
+
+    Animated.parallel([
+      Animated.timing(textOpacity, {
+        toValue: 1,
+        duration: 900,
+        delay: 250,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }),
+      Animated.timing(textOffset, {
+        toValue: 0,
+        duration: 900,
+        delay: 250,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    return () => pulseAnimation.stop();
+  }, [pulse, textOpacity, textOffset]);
+
+  const scale = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.98, 1.04],
+  });
+
+  const glowOpacity = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.2, 0.45],
+  });
+
+  return (
+    <ScrollView
+      contentInsetAdjustmentBehavior="automatic"
+      style={styles.loadingRoot}
+      contentContainerStyle={[
+        styles.loadingContent,
+        { paddingTop: insets.top + 32, paddingBottom: insets.bottom + 32 },
+      ]}
+    >
+      <LinearGradient
+        colors={['#FBF7F2', '#F2E3D5']}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={StyleSheet.absoluteFillObject}
+      />
+      <View style={styles.loadingCenter}>
+        <Animated.View style={[styles.glow, { opacity: glowOpacity }]} />
+        <AnimatedImage
+          source={require('../../assets/splash-symbol.png')}
+          contentFit="contain"
+          style={[styles.logo, { transform: [{ scale }] }]}
+        />
+        <Animated.View
+          style={[
+            styles.textWrap,
+            { opacity: textOpacity, transform: [{ translateY: textOffset }] },
+          ]}
+        >
+          <Text style={styles.title}>FocusBlocks</Text>
+          <Text style={styles.subtitle}>Focus, in blocks</Text>
+        </Animated.View>
+      </View>
+    </ScrollView>
+  );
+}
+
 // Root Navigator (no theme dependency during loading)
 export default function AppNavigator() {
   const { isLoading } = useApp();
+  const [showLoading, setShowLoading] = useState(true);
+  const loadStartRef = useRef(Date.now());
 
-  if (isLoading) {
-    return (
-      <View style={{
-        flex: 1,
-        backgroundColor: '#FAF6F1',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        <View style={{
-          width: 100,
-          height: 100,
-          borderRadius: 24,
-          backgroundColor: '#FFFFFF',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: 24,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.1,
-          shadowRadius: 12,
-          elevation: 4,
-        }}>
-          <View style={{
-            width: 56,
-            height: 56,
-            borderRadius: 28,
-            backgroundColor: '#D4714A',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <Text style={{ fontSize: 28, color: '#FFF' }}>✓</Text>
-          </View>
-        </View>
-        <Text style={{ fontSize: 32, fontWeight: '700', color: '#3D3D3D' }}>FocusBlocks</Text>
-        <Text style={{ fontSize: 16, color: '#8B8B8B', marginTop: 8 }}>Your cozy space for deep work</Text>
-      </View>
-    );
+  useEffect(() => {
+    if (isLoading) {
+      loadStartRef.current = Date.now();
+      setShowLoading(true);
+      return undefined;
+    }
+
+    const minDurationMs = 2000;
+    const elapsed = Date.now() - loadStartRef.current;
+    const remaining = Math.max(0, minDurationMs - elapsed);
+    const timer = setTimeout(() => setShowLoading(false), remaining);
+    return () => clearTimeout(timer);
+  }, [isLoading]);
+
+  if (isLoading || showLoading) {
+    return <LoadingScreen />;
   }
 
   return <MainNavigator />;
 }
+
+const styles = StyleSheet.create({
+  loadingRoot: {
+    flex: 1,
+    backgroundColor: '#FAF6F1',
+  },
+  loadingContent: {
+    flexGrow: 1,
+  },
+  loadingCenter: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 18,
+  },
+  glow: {
+    position: 'absolute',
+    width: 220,
+    height: 220,
+    borderRadius: 110,
+    backgroundColor: '#EBCB88',
+    boxShadow: '0 30px 60px rgba(214, 165, 86, 0.35)',
+  },
+  logo: {
+    width: 164,
+    height: 164,
+  },
+  textWrap: {
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 12,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#2F2620',
+    letterSpacing: 0.4,
+  },
+  subtitle: {
+    fontSize: 15,
+    color: '#8B7768',
+    letterSpacing: 0.4,
+  },
+});

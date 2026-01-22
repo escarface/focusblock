@@ -3,6 +3,7 @@
 
 export const spacing = {
   // Base unit: 4px
+  unit: 4,
   xxs: 4,
   xs: 8,
   sm: 12,
@@ -13,24 +14,39 @@ export const spacing = {
   xxxl: 48,
 
   // Screen padding
-  screenHorizontal: 20,
-  screenVertical: 16,
+  screenHorizontal: 24,
+  screenVertical: 24,
+
+  // Gaps
+  gapSm: 12,
+  gapMd: 16,
+  gapLg: 24,
 
   // Card/container
   cardPadding: 16,
+  cardPaddingCompact: 12,
   cardRadius: 16,
-  cardRadiusLarge: 24,
+  cardRadiusLarge: 20,
   cardRadiusSmall: 12,
 
   // Input fields
   inputPadding: 16,
   inputRadius: 16,
+  inputHeight: 56,
 
   // Buttons
-  buttonPadding: 16,
-  buttonRadius: 16,
-  buttonRadiusSmall: 12,
-  buttonRadiusPill: 50,
+  buttonPaddingVertical: 14,
+  buttonPaddingHorizontal: 20,
+  buttonPaddingSmallVertical: 10,
+  buttonPaddingSmallHorizontal: 16,
+  buttonPaddingLargeVertical: 18,
+  buttonPaddingLargeHorizontal: 24,
+  buttonRadius: 12,
+  buttonRadiusSmall: 10,
+  buttonRadiusPill: 999,
+  buttonHeightSmall: 36,
+  buttonHeightMedium: 44,
+  buttonHeightLarge: 52,
 
   // Icons
   iconSmall: 20,
@@ -47,25 +63,13 @@ export const spacing = {
 
 export const shadows = {
   small: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.06)',
   },
   medium: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    boxShadow: '0 6px 14px rgba(0, 0, 0, 0.12)',
   },
   large: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 8,
+    boxShadow: '0 12px 24px rgba(0, 0, 0, 0.16)',
   },
 };
 
