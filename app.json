@@ -15,6 +15,9 @@
     "assetBundlePatterns": [
       "assets/**/*"
     ],
+    "plugins": [
+      "expo-router"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.focusblocks.app",

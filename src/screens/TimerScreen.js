@@ -77,7 +77,7 @@ export default function TimerScreen({ navigation }) {
       headerLargeTitleStyle: { color: colors.textPrimary },
       headerRight: () => (
         <Pressable
-          onPress={() => navigation.navigate('Settings')}
+          onPress={() => navigation.navigate('settings')}
           hitSlop={10}
           accessibilityRole="button"
           accessibilityLabel="Settings"
@@ -450,7 +450,7 @@ export default function TimerScreen({ navigation }) {
           styles.scrollContent,
           {
             paddingTop: spacing.sm,
-            paddingBottom: insets.bottom + spacing.xxxl,
+            paddingBottom: insets.bottom + spacing.xxxl + (spacing.tabBarHeight ?? 80),
             paddingHorizontal: spacing.screenHorizontal,
           },
         ]}
@@ -572,7 +572,10 @@ export default function TimerScreen({ navigation }) {
             </View>
 
             {/* Up Next Section */}
-            <View style={styles.upNextHeader}>
+            <View style={[
+              styles.upNextHeader,
+              { marginBottom: Math.min(8 + todayBlocks.length * 4, 24) }
+            ]}>
               <Text style={[styles.upNextTitle, { color: colors.textPrimary }]}>
                 Up Next
               </Text>
@@ -674,16 +677,6 @@ export default function TimerScreen({ navigation }) {
         </TouchableOpacity>
       </Modal>
 
-      {/* Floating Add Button */}
-      <TouchableOpacity
-        style={[styles.fab, { backgroundColor: colors.primary }]}
-        onPress={() => openEditBlock()}
-        activeOpacity={0.8}
-        accessibilityRole="button"
-        accessibilityLabel="Add block"
-      >
-        <SymbolIcon name="plus" color="#FFF" size={28} />
-      </TouchableOpacity>
     </View>
   );
 }
@@ -691,6 +684,8 @@ export default function TimerScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
+    overflow: 'visible',
   },
   scrollContent: {
     flexGrow: 1,
@@ -778,7 +773,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    // marginBottom is now dynamic based on block count
   },
   upNextTitle: {
     fontSize: 18,
@@ -793,18 +788,6 @@ const styles = StyleSheet.create({
   countText: {
     fontSize: 13,
     fontWeight: '500',
-  },
-  fab: {
-    position: 'absolute',
-    bottom: 100,
-    right: 20,
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    borderCurve: 'continuous',
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
   },
   previewOverlay: {
     flex: 1,
