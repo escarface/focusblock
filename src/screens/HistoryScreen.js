@@ -485,7 +485,7 @@ export default function HistoryScreen({ navigation }) {
           return (
             <TouchableOpacity
               style={[styles.completedBlock, { backgroundColor: colors.surface }]}
-              onPress={() => navigation.navigate('BlockDetail', { blockId: item.id })}
+              onPress={() => navigation.navigate('BlockDetail', { blockId: item.id, allowEdit: false })}
             >
               <View style={styles.completedInfo}>
                 <SymbolIcon name="briefcase" color={colors.textMuted} size={18} />

@@ -1,0 +1,94 @@
+{
+  "name": "Menu de navegacion hibrido con Expo Router",
+  "branchName": "ralph/menu-de-navegacion-hibrido-expo-router",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Migracion del entry y providers",
+      "description": "As a user, I want the app to start normally with all providers so that state, theme, and notifications keep working.",
+      "acceptanceCriteria": [
+        "El entry usa Expo Router y mantiene AppProvider, ThemeProvider, WatchCommandHandler, y SafeAreaProvider",
+        "El splash/loading actual sigue funcionando sin flashes en blanco",
+        "La app inicia en iOS/Android sin errores de navegacion",
+        "npm test passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "dependsOn": [],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-002",
+      "title": "Estructura base de tabs con Expo Router",
+      "description": "As a user, I want a modern tab-based navigation shell so that I can access the main sections quickly.",
+      "acceptanceCriteria": [
+        "Crear estructura de tabs en app/(tabs)/_layout.js usando Expo Router",
+        "Definir rutas para Timer, Projects/Tasks, History y Settings",
+        "Los tabs muestran solo iconos (sin labels visibles) y tienen labels accesibles",
+        "El orden de tabs coincide con el actual (Timer, Tasks, History, Settings)",
+        "npm test passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "dependsOn": [
+        "US-001"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-003",
+      "title": "Integrar flujos de Timer y History",
+      "description": "As a user, I want Timer and History flows to work inside their tabs so that existing navigation remains familiar.",
+      "acceptanceCriteria": [
+        "Timer mantiene navegacion a EditBlock y BlockDetail",
+        "History mantiene navegacion a BlockDetail",
+        "El back button retorna al tab correcto y a la pantalla previa esperada",
+        "npm test passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "dependsOn": [
+        "US-002"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-004",
+      "title": "Integrar flujos de Projects/Tasks y Settings",
+      "description": "As a user, I want Projects and Settings flows to work inside their tabs so that existing navigation remains familiar.",
+      "acceptanceCriteria": [
+        "Projects mantiene navegacion a ProjectDetail, EditBlock y BlockDetail",
+        "Settings mantiene navegacion a EditProfile",
+        "El back button retorna al tab correcto y a la pantalla previa esperada",
+        "npm test passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "dependsOn": [
+        "US-002"
+      ],
+      "completionNotes": "Completed by agent"
+    },
+    {
+      "id": "US-005",
+      "title": "Paridad visual del tab bar",
+      "description": "As a user, I want the new tab bar to feel consistent with the current design so that the app looks cohesive.",
+      "acceptanceCriteria": [
+        "El tab bar usa colores/tema actuales de src/contexts/ThemeContext",
+        "Iconos y espaciados mantienen consistencia visual con el menu actual",
+        "Se respetan safe areas en dispositivos con home indicator",
+        "npm test passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "dependsOn": [
+        "US-003",
+        "US-004"
+      ],
+      "completionNotes": "Completed by agent"
+    }
+  ],
+  "metadata": {
+    "updatedAt": "2026-01-25T13:30:30.138Z"
+  }
+}

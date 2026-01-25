@@ -12,5 +12,9 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!(@react-native|react-native|expo|@expo)/)',
   ],
+  modulePathIgnorePatterns: [
+    '<rootDir>/\\.[^/]+/',
+  ],
+  passWithNoTests: true,
   setupFiles: ['<rootDir>/jest.setup.js'],
 };

@@ -1,5 +1,5 @@
 // FocusBlocks Edit Profile Screen
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,23 @@ export default function EditProfileScreen({ navigation }) {
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
   const [loading, setLoading] = useState(false);
+
+  const handleBack = useCallback(() => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return;
+    }
+
+    const parent = navigation.getParent();
+    if (!parent) return;
+
+    const routes = parent.getState()?.routeNames || [];
+    if (routes.includes('settings')) {
+      parent.navigate('settings');
+    } else if (routes.includes('Settings')) {
+      parent.navigate('Settings');
+    }
+  }, [navigation]);
 
   const handleSave = async () => {
     if (!name.trim()) return;
@@ -51,7 +68,7 @@ export default function EditProfileScreen({ navigation }) {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Header
         title="Edit Profile"
-        leftAction={() => navigation.goBack()}
+        leftAction={handleBack}
       />
 
       <ScrollView

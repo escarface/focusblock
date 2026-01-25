@@ -2,7 +2,6 @@
 // Main navigation structure
 
 import React, { useEffect, useRef, useState } from 'react';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Animated, Easing, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -127,7 +126,7 @@ function TabNavigator() {
 }
 
 // Timer Stack
-function TimerStackNavigator() {
+export function TimerStackNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
@@ -156,7 +155,7 @@ function TimerStackNavigator() {
 }
 
 // Projects Stack
-function ProjectsStackNavigator() {
+export function ProjectsStackNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
@@ -186,7 +185,7 @@ function ProjectsStackNavigator() {
 }
 
 // History Stack
-function HistoryStackNavigator() {
+export function HistoryStackNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="HistoryMain" component={HistoryScreen} />
@@ -196,38 +195,12 @@ function HistoryStackNavigator() {
 }
 
 // Settings Stack
-function SettingsStackNavigator() {
+export function SettingsStackNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="SettingsMain" component={SettingsScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
     </Stack.Navigator>
-  );
-}
-
-// Main Navigator (uses theme - only rendered after loading)
-function MainNavigator() {
-  const { colors, isDark } = useTheme();
-
-  const baseTheme = isDark ? DarkTheme : DefaultTheme;
-
-  const navigationTheme = {
-    ...baseTheme,
-    colors: {
-      ...baseTheme.colors,
-      primary: colors.primary,
-      background: colors.background,
-      card: colors.surface,
-      text: colors.textPrimary,
-      border: colors.border,
-      notification: colors.primary,
-    },
-  };
-
-  return (
-    <NavigationContainer theme={navigationTheme}>
-      <TabNavigator />
-    </NavigationContainer>
   );
 }
 
@@ -347,7 +320,7 @@ export default function AppNavigator() {
     return <LoadingScreen />;
   }
 
-  return <MainNavigator />;
+  return <TabNavigator />;
 }
 
 const styles = StyleSheet.create({

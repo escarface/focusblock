@@ -21,6 +21,7 @@
 		D0C7C41A2F1FE86900D5DE08 /* SharedDataBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C7C4172F1FE86900D5DE08 /* SharedDataBridge.m */; };
 		D2B4F4D720063F79DF35C131 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0B82C9A2344D1F29C279574F /* PrivacyInfo.xcprivacy */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
+		F7FFFBFCD7B208DB34B6C741 /* libPods-FocusBlocksWidgetExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5363B36B84A283FD58EE3D11 /* libPods-FocusBlocksWidgetExtension.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,10 +53,13 @@
 		13B07F961A680F5B00A75B9A /* FocusBlocks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FocusBlocks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = FocusBlocks/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = FocusBlocks/Info.plist; sourceTree = "<group>"; };
+		21444C7E06B2B19AAEBCE4AD /* Pods-FocusBlocksWidgetExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FocusBlocksWidgetExtension.release.xcconfig"; path = "Target Support Files/Pods-FocusBlocksWidgetExtension/Pods-FocusBlocksWidgetExtension.release.xcconfig"; sourceTree = "<group>"; };
 		3815CD215106127BCE3C11A0 /* Pods-FocusBlocks.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FocusBlocks.debug.xcconfig"; path = "Target Support Files/Pods-FocusBlocks/Pods-FocusBlocks.debug.xcconfig"; sourceTree = "<group>"; };
+		5363B36B84A283FD58EE3D11 /* libPods-FocusBlocksWidgetExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FocusBlocksWidgetExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		649E432C0174E475DAD36DC0 /* Pods-FocusBlocks.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FocusBlocks.release.xcconfig"; path = "Target Support Files/Pods-FocusBlocks/Pods-FocusBlocks.release.xcconfig"; sourceTree = "<group>"; };
 		909162FE146F212CFD06D320 /* libPods-FocusBlocks.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FocusBlocks.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = FocusBlocks/SplashScreen.storyboard; sourceTree = "<group>"; };
+		BB1960893455580E1C087E88 /* Pods-FocusBlocksWidgetExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FocusBlocksWidgetExtension.debug.xcconfig"; path = "Target Support Files/Pods-FocusBlocksWidgetExtension/Pods-FocusBlocksWidgetExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		D00D6C082F1FF46200B0D308 /* SharedDataBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SharedDataBridge.m; sourceTree = "<group>"; };
 		D00D6C092F1FF46200B0D308 /* SharedDataBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedDataBridge.swift; sourceTree = "<group>"; };
@@ -100,6 +104,7 @@
 			files = (
 				D0C7C3FB2F1FE53800D5DE08 /* SwiftUI.framework in Frameworks */,
 				D0C7C3F92F1FE53800D5DE08 /* WidgetKit.framework in Frameworks */,
+				F7FFFBFCD7B208DB34B6C741 /* libPods-FocusBlocksWidgetExtension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,6 +144,7 @@
 				909162FE146F212CFD06D320 /* libPods-FocusBlocks.a */,
 				D0C7C3F82F1FE53800D5DE08 /* WidgetKit.framework */,
 				D0C7C3FA2F1FE53800D5DE08 /* SwiftUI.framework */,
+				5363B36B84A283FD58EE3D11 /* libPods-FocusBlocksWidgetExtension.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -198,6 +204,8 @@
 			children = (
 				3815CD215106127BCE3C11A0 /* Pods-FocusBlocks.debug.xcconfig */,
 				649E432C0174E475DAD36DC0 /* Pods-FocusBlocks.release.xcconfig */,
+				BB1960893455580E1C087E88 /* Pods-FocusBlocksWidgetExtension.debug.xcconfig */,
+				21444C7E06B2B19AAEBCE4AD /* Pods-FocusBlocksWidgetExtension.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -233,6 +241,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D0C7C40F2F1FE53B00D5DE08 /* Build configuration list for PBXNativeTarget "FocusBlocksWidgetExtension" */;
 			buildPhases = (
+				84D701871E2C535D53EC9E87 /* [CP] Check Pods Manifest.lock */,
 				D0C7C3F32F1FE53800D5DE08 /* Sources */,
 				D0C7C3F42F1FE53800D5DE08 /* Frameworks */,
 			);
@@ -394,6 +403,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FocusBlocks/Pods-FocusBlocks-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		84D701871E2C535D53EC9E87 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FocusBlocksWidgetExtension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F3A0C3BF0CD72B0DCA3E7AE0 /* [Expo] Configure project */ = {
@@ -642,6 +673,7 @@
 		};
 		D0C7C40C2F1FE53B00D5DE08 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BB1960893455580E1C087E88 /* Pods-FocusBlocksWidgetExtension.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -691,6 +723,7 @@
 		};
 		D0C7C40D2F1FE53B00D5DE08 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 21444C7E06B2B19AAEBCE4AD /* Pods-FocusBlocksWidgetExtension.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

@@ -1,6 +1,7 @@
 // FocusBlocks Edit/Create Block Screen
 import React, { useCallback, useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   View,
   Text,
   StyleSheet,
@@ -179,6 +180,10 @@ export default function EditBlockScreen({ navigation, route }) {
       : 'rgba(255, 255, 255, 0.88)'
     : colors.background;
 
+  useEffect(() => {
+    console.log('EditBlockScreen mounted (inline footer)');
+  }, []);
+
   return (
     <KeyboardAvoidingView
       style={[
@@ -202,339 +207,355 @@ export default function EditBlockScreen({ navigation, route }) {
             intensity={isDark ? 80 : 70}
             tint={isDark ? 'dark' : 'light'}
             style={StyleSheet.absoluteFill}
+            pointerEvents="none"
           />
         )}
         <View style={styles.sheetContent}>
-          {/* Handle bar */}
-          <View style={styles.handleContainer}>
-            <View style={[styles.handle, { backgroundColor: colors.border }]} />
-          </View>
-
           <ScrollView
             contentInsetAdjustmentBehavior="automatic"
+            style={styles.scrollView}
             contentContainerStyle={[
               styles.scrollContent,
               {
-                paddingBottom: spacing.xxxl,
+                paddingBottom: spacing.lg,
                 paddingHorizontal: spacing.screenHorizontal,
               },
             ]}
+            scrollIndicatorInsets={{ bottom: insets.bottom }}
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
           >
             {/* Header */}
             <View style={styles.header}>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={[styles.closeButton, { backgroundColor: colors.backgroundSecondary }]}
+              >
+                <SymbolIcon name="close" color={colors.textSecondary} size={20} />
+              </TouchableOpacity>
               <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
                 {isEditing ? 'Edit Block' : 'New Block'}
               </Text>
               <TouchableOpacity
-                onPress={() => navigation.goBack()}
+                onPress={handleSave}
+                disabled={loading}
                 style={[
-                  styles.closeButton,
+                  styles.saveAction,
                   { backgroundColor: colors.backgroundSecondary },
                 ]}
               >
-                <SymbolIcon name="close" color={colors.textSecondary} size={20} />
+                {loading ? (
+                  <ActivityIndicator size="small" color={colors.primary} />
+                ) : (
+                  <Text
+                    style={[
+                      styles.saveText,
+                      { color: loading ? colors.textMuted : colors.primary },
+                    ]}
+                  >
+                    {isEditing ? 'Save' : 'Create'}
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
 
-            {/* Title Input */}
-            <View style={styles.section}>
-              <Text style={[styles.label, { color: colors.textPrimary }]}>
-                What are you working on?
-              </Text>
-              <View
-                style={[
-                  styles.titleInput,
-                  {
-                    backgroundColor: colors.surface,
-                    borderColor: titleError ? colors.error : colors.border,
-                  },
-                ]}
-              >
-                <TextInput
-                  value={title}
-                  onChangeText={(text) => {
-                    setTitle(text);
-                    setTitleError('');
-                    setSaveError('');
-                  }}
-                  placeholder="Project Planning"
-                  placeholderTextColor={colors.textMuted}
-                  style={[styles.titleTextInput, { color: colors.textPrimary }]}
-                />
-                <SymbolIcon name="edit" color={colors.textMuted} size={20} />
-              </View>
-              {!!titleError && (
-                <Animated.Text
-                  entering={FadeIn.duration(200)}
-                  exiting={FadeOut.duration(150)}
-                  selectable
-                  style={[styles.fieldError, { color: colors.error }]}
-                >
-                  {titleError}
-                </Animated.Text>
-              )}
-            </View>
-
-            {/* Duration */}
-            <View style={styles.section}>
-              <View style={styles.durationHeader}>
+              {/* Title Input */}
+              <View style={styles.section}>
                 <Text style={[styles.label, { color: colors.textPrimary }]}>
-                  Duration
+                  Enter your Task Title
                 </Text>
                 <View
                   style={[
-                    styles.minutesBadge,
-                    { backgroundColor: colors.backgroundSecondary },
+                    styles.titleInput,
+                    {
+                      backgroundColor: colors.surface,
+                      borderColor: titleError ? colors.error : colors.border,
+                    },
                   ]}
                 >
-                  <Text
-                    style={[styles.minutesText, { color: colors.textSecondary }]}
+                  <TextInput
+                    value={title}
+                    onChangeText={(text) => {
+                      setTitle(text);
+                      setTitleError('');
+                      setSaveError('');
+                    }}
+                    placeholder="Project Planning"
+                    placeholderTextColor={colors.textMuted}
+                    style={[styles.titleTextInput, { color: colors.textPrimary }]}
+                  />
+                  <SymbolIcon name="edit" color={colors.textMuted} size={20} />
+                </View>
+                {!!titleError && (
+                  <Animated.Text
+                    entering={FadeIn.duration(200)}
+                    exiting={FadeOut.duration(150)}
+                    selectable
+                    style={[styles.fieldError, { color: colors.error }]}
                   >
-                    MINUTES
+                    {titleError}
+                  </Animated.Text>
+                )}
+              </View>
+
+              {/* Duration */}
+              <View style={styles.section}>
+                <View style={styles.durationHeader}>
+                  <Text style={[styles.label, { color: colors.textPrimary }]}>
+                    Duration
                   </Text>
+                  <View
+                    style={[
+                      styles.minutesBadge,
+                      { backgroundColor: colors.backgroundSecondary },
+                    ]}
+                  >
+                    <Text
+                      style={[styles.minutesText, { color: colors.textSecondary }]}
+                    >
+                      MINUTES
+                    </Text>
+                  </View>
+                </View>
+
+                <View
+                  style={[
+                    styles.durationSelector,
+                    {
+                      backgroundColor: colors.surface,
+                      borderColor: colors.border,
+                      borderRadius: spacing.cardRadiusSmall,
+                    },
+                  ]}
+                >
+                  {durationPresets.map((preset) => (
+                    <DurationOption
+                      key={preset}
+                      value={preset}
+                      selected={duration === preset}
+                      colors={colors}
+                      onPress={() => {
+                        setDuration(preset);
+                        setCustomDurationText('');
+                        setIsEditingCustom(false);
+                        setDurationError('');
+                        setSaveError('');
+                        triggerSelectionHaptic();
+                      }}
+                    />
+                  ))}
+                </View>
+
+                {/* Duration adjusters */}
+                <View style={styles.durationAdjusters}>
+                  <TouchableOpacity
+                    style={[styles.adjusterButton, { borderColor: colors.border }]}
+                    onPress={() => addDuration(5)}
+                  >
+                    <Text
+                      style={[styles.adjusterText, { color: colors.textSecondary }]}
+                    >
+                      +5m
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.adjusterButton, { borderColor: colors.border }]}
+                    onPress={() => addDuration(10)}
+                  >
+                    <Text
+                      style={[styles.adjusterText, { color: colors.textSecondary }]}
+                    >
+                      +10m
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                {/* Custom duration input */}
+                <View style={styles.customDurationContainer}>
+                  <Text
+                    style={[
+                      styles.customDurationLabel,
+                      { color: colors.textSecondary },
+                    ]}
+                  >
+                    Or enter custom:
+                  </Text>
+                  <TextInput
+                    style={[
+                      styles.durationInput,
+                      {
+                        borderColor: durationError ? colors.error : colors.border,
+                        backgroundColor: colors.surface,
+                        color: colors.textPrimary,
+                      },
+                    ]}
+                    value={isEditingCustom ? customDurationText : duration.toString()}
+                    onChangeText={(text) => {
+                      setIsEditingCustom(true);
+                      setCustomDurationText(text);
+                      setDurationError('');
+                      setSaveError('');
+
+                      if (text === '') {
+                        return;
+                      }
+
+                      const num = parseInt(text, 10);
+                      if (!isNaN(num) && num >= 1 && num <= 180) {
+                        setDuration(num);
+                      }
+                    }}
+                    onBlur={() => {
+                      setIsEditingCustom(false);
+                      const num = parseInt(customDurationText, 10);
+                      if (customDurationText === '') {
+                        setCustomDurationText('');
+                        return;
+                      }
+
+                      if (isNaN(num) || num < 1) {
+                        setCustomDurationText('');
+                        setDurationError('Duration must be between 1 and 180 minutes');
+                        triggerErrorHaptic();
+                        return;
+                      }
+
+                      if (num > 180) {
+                        setDuration(180);
+                      } else {
+                        setDuration(num);
+                      }
+                      setCustomDurationText('');
+                    }}
+                    onFocus={() => {
+                      setIsEditingCustom(true);
+                      setCustomDurationText(duration.toString());
+                      setSaveError('');
+                    }}
+                    keyboardType="number-pad"
+                    placeholder="25"
+                    placeholderTextColor={colors.textMuted}
+                    maxLength={3}
+                  />
+                  <Text
+                    style={[styles.minutesSuffix, { color: colors.textSecondary }]}
+                  >
+                    minutes
+                  </Text>
+                </View>
+
+                {!!durationError && (
+                  <Animated.Text
+                    entering={FadeIn.duration(200)}
+                    exiting={FadeOut.duration(150)}
+                    selectable
+                    style={[styles.fieldError, { color: colors.error }]}
+                  >
+                    {durationError}
+                  </Animated.Text>
+                )}
+              </View>
+
+              {/* Tag Color */}
+              <View style={styles.section}>
+                <Text style={[styles.label, { color: colors.textPrimary }]}>
+                  Tag Color
+                </Text>
+                <View
+                  style={[
+                    styles.colorSelector,
+                    { backgroundColor: colors.surface, borderColor: colors.border },
+                  ]}
+                >
+                  {tagColors.map((tag) => (
+                    <TouchableOpacity
+                      key={tag.id}
+                      style={[
+                        styles.colorOption,
+                        { backgroundColor: tag.color },
+                        selectedColor === tag.id && styles.colorOptionSelected,
+                      ]}
+                      onPress={() => {
+                        setSelectedColor(tag.id);
+                        setSaveError('');
+                        triggerSelectionHaptic();
+                      }}
+                    >
+                      {selectedColor === tag.id && (
+                        <View style={styles.colorSelectedRing} />
+                      )}
+                    </TouchableOpacity>
+                  ))}
                 </View>
               </View>
 
-              <View
-                style={[
-                  styles.durationSelector,
-                  {
-                    backgroundColor: colors.surface,
-                    borderColor: colors.border,
-                    borderRadius: spacing.cardRadiusSmall,
-                  },
-                ]}
-              >
-                {durationPresets.map((preset) => (
-                  <DurationOption
-                    key={preset}
-                    value={preset}
-                    selected={duration === preset}
-                    colors={colors}
-                    onPress={() => {
-                      setDuration(preset);
-                      setCustomDurationText('');
-                      setIsEditingCustom(false);
-                      setDurationError('');
-                      setSaveError('');
-                      triggerSelectionHaptic();
-                    }}
-                  />
-                ))}
+              {/* Category */}
+              <View style={styles.section}>
+                <Text style={[styles.label, { color: colors.textPrimary }]}>
+                  Category
+                </Text>
+                <View style={styles.categorySelector}>
+                  {categories.map((cat) => (
+                    <TouchableOpacity
+                      key={cat.id}
+                      style={[
+                        styles.categoryOption,
+                        {
+                          backgroundColor:
+                            selectedCategory === cat.id
+                              ? colors.primary
+                              : colors.backgroundSecondary,
+                        },
+                      ]}
+                      onPress={() => {
+                        setSelectedCategory(cat.id);
+                        setSaveError('');
+                        triggerSelectionHaptic();
+                      }}
+                    >
+                      <Text
+                        style={[
+                          styles.categoryText,
+                          {
+                            color:
+                              selectedCategory === cat.id
+                                ? '#FFF'
+                                : colors.textSecondary,
+                          },
+                        ]}
+                      >
+                        {cat.label}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </View>
 
-              {/* Duration adjusters */}
-              <View style={styles.durationAdjusters}>
-                <TouchableOpacity
-                  style={[styles.adjusterButton, { borderColor: colors.border }]}
-                  onPress={() => addDuration(5)}
-                >
-                  <Text
-                    style={[styles.adjusterText, { color: colors.textSecondary }]}
-                  >
-                    +5m
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.adjusterButton, { borderColor: colors.border }]}
-                  onPress={() => addDuration(10)}
-                >
-                  <Text
-                    style={[styles.adjusterText, { color: colors.textSecondary }]}
-                  >
-                    +10m
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Custom duration input */}
-              <View style={styles.customDurationContainer}>
-                <Text
-                  style={[
-                    styles.customDurationLabel,
-                    { color: colors.textSecondary },
-                  ]}
-                >
-                  Or enter custom:
+              {/* Notes (optional) */}
+              <View style={styles.section}>
+                <Text style={[styles.label, { color: colors.textPrimary }]}>
+                  Notes (optional)
                 </Text>
                 <TextInput
+                  value={notes}
+                  onChangeText={(text) => {
+                    setNotes(text);
+                    setSaveError('');
+                  }}
+                  placeholder="Add notes..."
+                  placeholderTextColor={colors.textMuted}
+                  multiline
+                  numberOfLines={3}
                   style={[
-                    styles.durationInput,
+                    styles.notesInput,
                     {
-                      borderColor: durationError ? colors.error : colors.border,
                       backgroundColor: colors.surface,
+                      borderColor: colors.border,
                       color: colors.textPrimary,
                     },
                   ]}
-                  value={isEditingCustom ? customDurationText : duration.toString()}
-                  onChangeText={(text) => {
-                    setIsEditingCustom(true);
-                    setCustomDurationText(text);
-                    setDurationError('');
-                    setSaveError('');
-
-                    if (text === '') {
-                      return;
-                    }
-
-                    const num = parseInt(text, 10);
-                    if (!isNaN(num) && num >= 1 && num <= 180) {
-                      setDuration(num);
-                    }
-                  }}
-                  onBlur={() => {
-                    setIsEditingCustom(false);
-                    const num = parseInt(customDurationText, 10);
-                    if (customDurationText === '') {
-                      setCustomDurationText('');
-                      return;
-                    }
-
-                    if (isNaN(num) || num < 1) {
-                      setCustomDurationText('');
-                      setDurationError('Duration must be between 1 and 180 minutes');
-                      triggerErrorHaptic();
-                      return;
-                    }
-
-                    if (num > 180) {
-                      setDuration(180);
-                    } else {
-                      setDuration(num);
-                    }
-                    setCustomDurationText('');
-                  }}
-                  onFocus={() => {
-                    setIsEditingCustom(true);
-                    setCustomDurationText(duration.toString());
-                    setSaveError('');
-                  }}
-                  keyboardType="number-pad"
-                  placeholder="25"
-                  placeholderTextColor={colors.textMuted}
-                  maxLength={3}
                 />
-                <Text
-                  style={[styles.minutesSuffix, { color: colors.textSecondary }]}
-                >
-                  minutes
-                </Text>
               </View>
-
-              {!!durationError && (
-                <Animated.Text
-                  entering={FadeIn.duration(200)}
-                  exiting={FadeOut.duration(150)}
-                  selectable
-                  style={[styles.fieldError, { color: colors.error }]}
-                >
-                  {durationError}
-                </Animated.Text>
-              )}
-            </View>
-
-            {/* Tag Color */}
-            <View style={styles.section}>
-              <Text style={[styles.label, { color: colors.textPrimary }]}>
-                Tag Color
-              </Text>
-              <View
-                style={[
-                  styles.colorSelector,
-                  { backgroundColor: colors.surface, borderColor: colors.border },
-                ]}
-              >
-                {tagColors.map((tag) => (
-                  <TouchableOpacity
-                    key={tag.id}
-                    style={[
-                      styles.colorOption,
-                      { backgroundColor: tag.color },
-                      selectedColor === tag.id && styles.colorOptionSelected,
-                    ]}
-                    onPress={() => {
-                      setSelectedColor(tag.id);
-                      setSaveError('');
-                      triggerSelectionHaptic();
-                    }}
-                  >
-                    {selectedColor === tag.id && (
-                      <View style={styles.colorSelectedRing} />
-                    )}
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-
-            {/* Category */}
-            <View style={styles.section}>
-              <Text style={[styles.label, { color: colors.textPrimary }]}>
-                Category
-              </Text>
-              <View style={styles.categorySelector}>
-                {categories.map((cat) => (
-                  <TouchableOpacity
-                    key={cat.id}
-                    style={[
-                      styles.categoryOption,
-                      {
-                        backgroundColor:
-                          selectedCategory === cat.id
-                            ? colors.primary
-                            : colors.backgroundSecondary,
-                      },
-                    ]}
-                    onPress={() => {
-                      setSelectedCategory(cat.id);
-                      setSaveError('');
-                      triggerSelectionHaptic();
-                    }}
-                  >
-                    <Text
-                      style={[
-                        styles.categoryText,
-                        {
-                          color:
-                            selectedCategory === cat.id
-                              ? '#FFF'
-                              : colors.textSecondary,
-                        },
-                      ]}
-                    >
-                      {cat.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-
-            {/* Notes (optional) */}
-            <View style={styles.section}>
-              <Text style={[styles.label, { color: colors.textPrimary }]}>
-                Notes (optional)
-              </Text>
-              <TextInput
-                value={notes}
-                onChangeText={(text) => {
-                  setNotes(text);
-                  setSaveError('');
-                }}
-                placeholder="Add notes..."
-                placeholderTextColor={colors.textMuted}
-                multiline
-                numberOfLines={3}
-                style={[
-                  styles.notesInput,
-                  {
-                    backgroundColor: colors.surface,
-                    borderColor: colors.border,
-                    color: colors.textPrimary,
-                  },
-                ]}
-              />
-            </View>
 
             {!!saveError && (
               <Animated.Text
@@ -546,31 +567,23 @@ export default function EditBlockScreen({ navigation, route }) {
                 {saveError}
               </Animated.Text>
             )}
-          </ScrollView>
 
-          {/* Bottom buttons */}
-          <View
-            style={[
-              styles.bottomButtons,
-              {
-                paddingBottom: insets.bottom + spacing.md,
-                paddingHorizontal: spacing.screenHorizontal,
-                borderTopColor: colors.border,
-              },
-            ]}
-          >
-            <Button
-              title="Save Block"
-              onPress={handleSave}
-              loading={loading}
-              style={styles.saveButton}
-            />
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Text style={[styles.cancelText, { color: colors.textSecondary }]}>
-                Cancel
-              </Text>
-            </TouchableOpacity>
-          </View>
+            {/* Action Buttons */}
+            <View style={[styles.bottomButtons, { marginBottom: insets.bottom }]}>
+              <Button
+                title={isEditing ? 'Save Changes' : 'Create Block'}
+                onPress={handleSave}
+                loading={loading}
+                size="large"
+                style={styles.saveButton}
+              />
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Text style={[styles.cancelText, { color: colors.textSecondary }]}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -586,14 +599,16 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     borderCurve: 'continuous',
     borderWidth: 1,
-    overflow: 'hidden',
   },
   sheetContent: {
     flex: 1,
+    position: 'relative',
+    overflow: 'visible',
   },
   handleContainer: {
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingTop: 32,
+    paddingBottom: 16,
   },
   handle: {
     width: 40,
@@ -602,24 +617,49 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 0,
+    paddingTop: 24,
+  },
+  scrollView: {
+    flex: 1,
   },
   header: {
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginBottom: 32,
+    minHeight: 44,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: '700',
+    textAlign: 'center',
   },
   closeButton: {
+    position: 'absolute',
+    left: 0,
     width: 36,
     height: 36,
     borderRadius: 18,
     borderCurve: 'continuous',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  saveAction: {
+    position: 'absolute',
+    right: 0,
+    minWidth: 72,
+    height: 32,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    borderCurve: 'continuous',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  saveText: {
+    fontSize: 16,
+    fontWeight: '600',
+    letterSpacing: 0.2,
   },
   section: {
     marginBottom: 28,
@@ -789,12 +829,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   bottomButtons: {
-    paddingHorizontal: 0,
-    paddingTop: 16,
-    borderTopWidth: 1,
+    marginTop: 8,
+    paddingTop: 24,
   },
   saveButton: {
     marginBottom: 12,
+    width: '100%',
   },
   cancelText: {
     fontSize: 16,

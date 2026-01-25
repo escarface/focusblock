@@ -95,6 +95,23 @@ export default function ProjectDetailScreen({ navigation, route }) {
     navigation.navigate('BlockDetail', { blockId: block.id });
   };
 
+  const handleBack = useCallback(() => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return;
+    }
+
+    const parent = navigation.getParent();
+    if (!parent) return;
+
+    const routes = parent.getState()?.routeNames || [];
+    if (routes.includes('tasks')) {
+      parent.navigate('tasks');
+    } else if (routes.includes('Tasks')) {
+      parent.navigate('Tasks');
+    }
+  }, [navigation]);
+
   const previewTagColor = previewBlock
     ? tagColors.find(t => t.id === previewBlock.color)?.color || colors.primary
     : colors.primary;
@@ -146,7 +163,7 @@ export default function ProjectDetailScreen({ navigation, route }) {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Header
         title={project?.name || 'All Blocks'}
-        leftAction={() => navigation.goBack()}
+        leftAction={handleBack}
         rightAction={() => openEditBlock()}
         rightIcon="plus"
       />

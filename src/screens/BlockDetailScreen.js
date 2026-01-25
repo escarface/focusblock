@@ -18,6 +18,7 @@ export default function BlockDetailScreen({ navigation, route }) {
   const { blocks, sessions, projects, updateBlock, deleteBlock } = useApp();
 
   const blockId = route?.params?.blockId;
+  const allowEdit = route?.params?.allowEdit !== false;
   const block = blocks.find(b => b.id === blockId);
   const project = block?.projectId ? projects.find(p => p.id === block.projectId) : null;
 
@@ -58,6 +59,7 @@ export default function BlockDetailScreen({ navigation, route }) {
   };
 
   const openEditBlock = () => {
+    if (!allowEdit) return;
     navigation.navigate('EditBlock', { block });
   };
 
@@ -94,8 +96,8 @@ export default function BlockDetailScreen({ navigation, route }) {
       <Header
         title="Block Details"
         leftAction={() => navigation.goBack()}
-        rightAction={openEditBlock}
-        rightIcon="edit"
+        rightAction={allowEdit ? openEditBlock : undefined}
+        rightIcon={allowEdit ? 'edit' : undefined}
       />
 
       <ScrollView
